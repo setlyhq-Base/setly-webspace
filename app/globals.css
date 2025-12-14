@@ -1,26 +1,366 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Setly Brand Colors */
+  --setly-primary-blue: #4F8DFF;
+  --setly-primary-blue-dark: #2F6BFF;
+  --setly-primary-blue-soft: #EAF1FF;
+  
+  /* Neutral Base */
+  --setly-surface: #FFFFFF;
+  --setly-surface-2: #F6F8FB;
+  --setly-border: #E6EAF0;
+  
+  /* Text Hierarchy */
+  --setly-ink: #0F172A;
+  --setly-text-secondary: #475569;
+  --setly-muted: #94A3B8;
+  
+  /* Accent Colors */
+  --setly-success: #22C55E;
+  --setly-success-bg: #DCFCE7;
+  --setly-warning: #F59E0B;
+  --setly-warning-bg: #FEF3C7;
+  --setly-error: #EF4444;
+  --setly-error-bg: #FEE2E2;
+  
+  /* Category Colors */
+  --setly-rooms-accent: #4F8DFF;
+  --setly-rooms-bg: #EAF1FF;
+  --setly-rides-accent: #10B981;
+  --setly-rides-bg: #ECFDF5;
+  --setly-market-accent: #8B5CF6;
+  --setly-market-bg: #F3E8FF;
+  
+  /* Legacy (for gradual migration) */
+  --setly-midnight: #0b1b3a;
+  --setly-midnight-2: #0a1630;
+  --setly-gold: #c7a24a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--setly-surface);
+  --color-foreground: var(--setly-ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Primary Brand */
+  --color-brand-blue: var(--setly-primary-blue);
+  --color-brand-blue-dark: var(--setly-primary-blue-dark);
+  --color-brand-blue-soft: var(--setly-primary-blue-soft);
+  
+  /* Legacy support */
+  --color-brand-midnight: var(--setly-midnight);
+  --color-brand-midnight-2: var(--setly-midnight-2);
+  --color-brand-gold: var(--setly-gold);
+
+  --color-surface: var(--setly-surface);
+  --color-surface-2: var(--setly-surface-2);
+  --color-ink: var(--setly-ink);
+  --color-text-secondary: var(--setly-text-secondary);
+  --color-muted: var(--setly-muted);
+  --color-border: var(--setly-border);
+  
+  /* Semantic Colors */
+  --color-success: var(--setly-success);
+  --color-warning: var(--setly-warning);
+  --color-error: var(--setly-error);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--setly-surface);
+  color: var(--setly-ink);
+  font-family: var(--font-sans);
+}
+
+/* Surface roles (used by Living Canvas) */
+.setly-canvas {
+  position: relative;
+  background:
+    radial-gradient(
+      1200px 760px at 18% 14%,
+      color-mix(in srgb, var(--setly-primary-blue) 10%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      980px 640px at 82% 22%,
+      color-mix(in srgb, var(--setly-primary-blue) 7%, transparent),
+      transparent 64%
+    ),
+    var(--setly-surface-2);
+}
+
+.setly-stage {
+  background: var(--setly-surface);
+  border: 1px solid var(--setly-border);
+  box-shadow:
+    0 28px 80px color-mix(in srgb, var(--setly-midnight) 14%, transparent),
+    0 1px 0 color-mix(in srgb, white 70%, transparent) inset;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--setly-gold) 30%, white);
+}
+
+@keyframes setly-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes setly-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes setly-scroll-cue {
+  0% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+}
+
+/* Scroll reveal (IntersectionObserver toggles data-revealed) */
+.setly-reveal {
+  opacity: 0;
+  transform: translateY(var(--setly-reveal-y, 12px));
+  filter: blur(0.6px);
+  transition:
+    opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: var(--setly-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.setly-reveal[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.setly-fade {
+  animation: setly-fade-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Hero aurora + glow */
+@keyframes setly-aurora {
+  0% {
+    transform: translate3d(-6%, -2%, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate3d(6%, 2%, 0) scale(1.03);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(-6%, -2%, 0) scale(1);
+    opacity: 0.6;
+  }
+}
+
+.setly-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.setly-noise {
+  position: relative;
+}
+
+.setly-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+}
+
+.setly-parallax {
+  transform: translate3d(0, calc(var(--setly-parallax-y, 0px) * 1), 0);
+  will-change: transform;
+}
+
+.setly-hero::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(
+      48% 40% at 20% 20%,
+      color-mix(in srgb, var(--setly-gold) 22%, transparent),
+      transparent 65%
+    ),
+    radial-gradient(
+      55% 48% at 78% 35%,
+      rgba(255, 255, 255, 0.10),
+      transparent 70%
+    ),
+    radial-gradient(
+      55% 55% at 55% 90%,
+      rgba(255, 255, 255, 0.08),
+      transparent 70%
+    );
+  filter: blur(32px);
+  animation: setly-aurora 14s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.setly-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+/* Premium button micro-interactions */
+.setly-btn {
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.setly-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.16);
+}
+
+.setly-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+}
+
+/* Touchable cards */
+.setly-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--setly-border);
+  background: var(--setly-card-bg, var(--setly-surface));
+  transition:
+    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.setly-card--secondary {
+  --setly-card-bg: var(--setly-surface-2);
+}
+
+.setly-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: radial-gradient(
+    380px 220px at var(--setly-mx, 50%) var(--setly-my, 50%),
+    color-mix(in srgb, var(--setly-gold) 20%, transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+
+.setly-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--setly-gold) 32%, var(--setly-border));
+  box-shadow: 0 16px 40px rgba(11, 27, 58, 0.11);
+}
+
+.setly-tilt {
+  transform-style: preserve-3d;
+}
+
+.setly-tilt:hover {
+  transform: translateY(-2px) rotateX(0.7deg) rotateY(-0.7deg);
+}
+
+.setly-card:hover::before {
+  opacity: 1;
+}
+
+.setly-scroll-cue {
+  animation: setly-scroll-cue 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setly-reveal,
+  .setly-fade {
+    animation: none;
+    transition: none;
+  }
+
+  .setly-scroll-cue {
+    animation: none;
+  }
+
+  .setly-hero::before {
+    animation: none;
+  }
+
+  .setly-btn,
+  .setly-card {
+    transition: none;
+  }
+}
+
+/* 3D Card Flip Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }

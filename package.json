@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "screenshots": "node scripts/capture-screenshots.mjs",
+    "record": "node scripts/record-living-canvas.mjs"
   },
   "dependencies": {
+    "framer-motion": "^12.23.26",
     "next": "16.0.10",
     "react": "19.2.1",
     "react-dom": "19.2.1"
@@ -20,6 +23,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
+    "playwright": "^1.57.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

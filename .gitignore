@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Company data (sensitive)
+SETLY company core data/
+recordings/
+screenshots/
