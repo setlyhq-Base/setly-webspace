@@ -38,6 +38,41 @@
   --setly-gold: #c7a24a;
 }
 
+/* Touch-optimized gesture handling */
+body {
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
+}
+
+/* Hardware acceleration for smooth transitions */
+.fixed,
+[data-screen] {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Prevent layout shift during transitions */
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Optimize text rendering */
+h1, h2, h3, p, span, div {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 @theme inline {
   --color-background: var(--setly-surface);
   --color-foreground: var(--setly-ink);

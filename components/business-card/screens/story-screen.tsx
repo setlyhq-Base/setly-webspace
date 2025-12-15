@@ -1,206 +1,154 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 interface StoryScreenProps {
   onNext: () => void;
   onBack: () => void;
-  onExploreApp: () => void;
+  onRestart?: () => void;
 }
 
-const storyBlocks = [
-  {
-    title: "What is Setly?",
-    content: [
-      "Setly = Settle + Easily",
-      "",
-      "A platform to help you settle into a new place — faster, calmer, together.",
-    ],
-    icon: "🏡",
-    gradient: "from-blue-50 to-white",
-  },
-  {
-    title: "The problem",
-    content: [
-      "Landing somewhere new means:",
-      "Housing, rides, groceries, people, trust — all at once.",
-      "",
-      "You open 20 tabs and still feel lost.",
-    ],
-    icon: "😰",
-    gradient: "from-orange-50 to-white",
-  },
-  {
-    title: "The solution",
-    content: [
-      "Setly brings:",
-      "• Housing",
-      "• Rides",
-      "• Essentials",
-      "• Community",
-      "",
-      "into one calm, guided experience.",
-    ],
-    icon: "✨",
-    gradient: "from-purple-50 to-white",
-  },
-  {
-    title: "Why it works",
-    content: [
-      "Built from lived experience.",
-      "Verified community of Setlies.",
-      "Designed for your first weeks, not power users.",
-    ],
-    icon: "💙",
-    gradient: "from-blue-50 to-white",
-  },
-];
-
-export function StoryScreen({ onNext, onBack, onExploreApp }: StoryScreenProps) {
-  const [currentBlock, setCurrentBlock] = useState(0);
-
-  const nextBlock = () => {
-    if (currentBlock < storyBlocks.length - 1) {
-      setCurrentBlock(currentBlock + 1);
+export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
+  
+  const handleAddToHomeScreen = () => {
+    if (navigator.share) {
+      alert("Tap the Share button, then 'Add to Home Screen' to save Setly");
+    } else {
+      alert("To save Setly: Tap Share → Add to Home Screen");
     }
   };
 
-  const prevBlock = () => {
-    if (currentBlock > 0) {
-      setCurrentBlock(currentBlock - 1);
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Setly',
+          text: 'Settle into a new place — faster, calmer, together.',
+          url: window.location.href
+        });
+      } catch (err) {
+        // User cancelled, that's okay
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Link copied to clipboard");
     }
   };
-
-  const block = storyBlocks[currentBlock];
-  const isLastBlock = currentBlock === storyBlocks.length - 1;
 
   return (
-    <div className="h-full flex flex-col px-6 py-8 bg-white">
-      <div className="max-w-md w-full mx-auto flex flex-col h-full">
-        {/* Progress dots */}
-        <div className="flex justify-center gap-2 mb-8">
-          {storyBlocks.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentBlock(idx)}
-              className={`h-2 rounded-full transition-all ${
-                idx === currentBlock
-                  ? "w-8 bg-[var(--setly-primary-blue)]"
-                  : "w-2 bg-gray-300"
-              }`}
-            />
-          ))}
-        </div>
-
-        {/* Story Block */}
-        <motion.div
-          key={currentBlock}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
-          className="flex-1 flex flex-col justify-center"
-        >
-          <div
-            className={`bg-gradient-to-b ${block.gradient} rounded-3xl p-8 shadow-lg`}
+    <div className="h-full flex flex-col bg-white relative overflow-hidden">
+      <div className="relative z-10 flex flex-col h-full px-8 py-12">
+        <div className="max-w-sm w-full mx-auto flex flex-col h-full justify-between">
+          
+          {/* The statement */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex-1 flex flex-col justify-center text-center -mt-12"
           >
-            {/* Icon */}
-            <div className="text-6xl mb-6 text-center">{block.icon}</div>
-
-            {/* Title */}
-            <h2 className="text-2xl font-bold text-[var(--setly-ink)] mb-6 text-center">
-              {block.title}
+            <h2 className="text-[36px] leading-[1.2] font-bold text-[var(--setly-ink)] mb-6">
+              Setly is being built<br />
+              for moments like yours
             </h2>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-base text-[var(--setly-text-secondary)] leading-relaxed"
+            >
+              A platform to help you settle into a new place —<br />
+              faster, calmer, together.
+            </motion.p>
+          </motion.div>
 
-            {/* Content */}
-            <div className="space-y-3">
-              {block.content.map((line, idx) => (
-                <p
-                  key={idx}
-                  className={`text-lg ${
-                    line === ""
-                      ? "h-2"
-                      : line.startsWith("•")
-                      ? "text-[var(--setly-ink)] pl-2"
-                      : line === "Setly = Settle + Easily"
-                      ? "text-[var(--setly-primary-blue)] font-semibold text-center"
-                      : "text-[var(--setly-text-secondary)]"
-                  }`}
-                >
-                  {line}
-                </p>
-              ))}
-            </div>
-          </div>
-        </motion.div>
+          {/* Actions with clear hierarchy */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.7 }}
+            className="space-y-4 mb-6"
+          >
+            {/* Primary: Keep Setly - gentle emphasis */}
+            <button
+              onClick={handleAddToHomeScreen}
+              className="w-full flex items-center gap-4 p-5 rounded-2xl bg-[var(--setly-primary-blue)]/[0.04] border border-[var(--setly-primary-blue)]/20 hover:border-[var(--setly-primary-blue)]/40 hover:bg-[var(--setly-primary-blue)]/[0.06] active:scale-[0.99] transition-all group shadow-sm shadow-[var(--setly-primary-blue)]/5"
+            >
+              <div className="w-11 h-11 rounded-xl bg-[var(--setly-primary-blue)]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--setly-primary-blue)]/15 transition-colors">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-[var(--setly-primary-blue)]">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                  <polyline points="17 21 17 13 7 13 7 21"/>
+                  <polyline points="7 3 7 8 15 8"/>
+                </svg>
+              </div>
+              <div className="flex-1 text-left">
+                <div className="text-base font-semibold text-[var(--setly-ink)]">Keep Setly</div>
+                <div className="text-sm text-[var(--setly-text-secondary)] mt-0.5">Add to your home screen</div>
+              </div>
+            </button>
 
-        {/* Navigation */}
-        <div className="space-y-3 pt-6">
-          {!isLastBlock ? (
-            <>
+            {/* Secondary actions - subtler */}
+            <div className="flex gap-3">
               <button
-                onClick={nextBlock}
-                className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-medium shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all"
+                onClick={handleShare}
+                className="flex-1 flex items-center gap-3 p-4 rounded-xl bg-white border border-[var(--setly-border)] hover:border-[var(--setly-primary-blue)]/30 hover:bg-[var(--setly-primary-blue)]/[0.02] active:scale-[0.99] transition-all group"
               >
-                Continue
+                <div className="w-9 h-9 rounded-lg bg-[var(--setly-primary-blue)]/5 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--setly-primary-blue)]/10 transition-colors">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-[var(--setly-primary-blue)]">
+                    <circle cx="18" cy="5" r="3"/>
+                    <circle cx="6" cy="12" r="3"/>
+                    <circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                  </svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="text-sm font-medium text-[var(--setly-ink)]">Pass it on</div>
+                </div>
               </button>
-              {currentBlock > 0 && (
-                <button
-                  onClick={prevBlock}
-                  className="w-full text-[var(--setly-text-secondary)] py-2 text-sm"
-                >
-                  ← Previous
-                </button>
-              )}
-            </>
-          ) : (
-            <>
-              {/* Primary CTAs */}
-              <button
-                onClick={onExploreApp}
-                className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-medium shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all"
-              >
-                Explore the app experience
-              </button>
+
               <button
                 onClick={onNext}
-                className="w-full bg-white border-2 border-[var(--setly-primary-blue)] text-[var(--setly-primary-blue)] rounded-2xl px-8 py-4 text-lg font-medium active:scale-[0.98] transition-all"
+                className="flex-1 flex items-center gap-3 p-4 rounded-xl bg-white border border-[var(--setly-border)] hover:border-[var(--setly-primary-blue)]/30 hover:bg-[var(--setly-primary-blue)]/[0.02] active:scale-[0.99] transition-all group"
               >
-                Get early access
+                <div className="w-9 h-9 rounded-lg bg-[var(--setly-primary-blue)]/5 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--setly-primary-blue)]/10 transition-colors">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-[var(--setly-primary-blue)]">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="text-sm font-medium text-[var(--setly-ink)]">Stay in touch</div>
+                </div>
               </button>
+            </div>
+          </motion.div>
 
-              {/* Secondary options */}
-              <div className="flex justify-center gap-6 pt-2 text-sm">
-                <button
-                  onClick={onBack}
-                  className="text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)]"
-                >
-                  Meet the founder
-                </button>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert("Link copied!");
-                  }}
-                  className="text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)]"
-                >
-                  Share Setly
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Back to beginning */}
-        {isLastBlock && (
-          <button
-            onClick={onBack}
-            className="w-full text-[var(--setly-text-secondary)] py-2 text-sm mt-2"
+          {/* Subtle navigation */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+            className="flex items-center justify-between text-sm"
           >
-            ← Back
-          </button>
-        )}
+            <button
+              onClick={onBack}
+              className="text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)] py-2 font-medium transition-colors"
+            >
+              ← Back
+            </button>
+            
+            {onRestart && (
+              <button
+                onClick={onRestart}
+                className="text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)] py-2 font-medium transition-colors"
+              >
+                Start again ↻
+              </button>
+            )}
+          </motion.div>
+        </div>
       </div>
     </div>
   );

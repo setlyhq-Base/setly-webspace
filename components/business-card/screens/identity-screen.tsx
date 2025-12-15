@@ -9,71 +9,78 @@ interface IdentityScreenProps {
 export function IdentityScreen({ onNext }: IdentityScreenProps) {
   return (
     <div className="h-full flex flex-col items-center justify-center px-6 bg-white">
-      <div className="max-w-md w-full space-y-8">
-        {/* Logo */}
+      <div className="max-w-md w-full flex flex-col items-center">
+        {/* Unified Logo Lockup - Dots falling on S */}
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-center"
+          className="flex items-start mb-10"
+          initial={{ 
+            scale: 0.3, 
+            opacity: 0,
+            filter: "blur(8px)"
+          }}
+          animate={{ 
+            scale: 1, 
+            opacity: 1,
+            filter: "blur(0px)"
+          }}
+          transition={{
+            duration: 1.2,
+            ease: [0.25, 0.46, 0.45, 0.94],
+          }}
         >
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-[var(--setly-primary-blue)] mb-6">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="white"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-10 h-10"
-            >
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          </div>
-          <h1 className="text-5xl font-bold text-[var(--setly-ink)] mb-2">
-            Setly
+          <h1 className="text-5xl font-bold text-[var(--setly-ink)] tracking-tight relative">
+            <img 
+              src="/setly_logo.png" 
+              alt="" 
+              className="w-10 h-10 absolute -left-1 -top-2.5 mix-blend-multiply"
+              style={{ backgroundColor: 'transparent' }}
+            />
+            <span className="inline-block pl-8">Setly</span>
           </h1>
         </motion.div>
 
-        {/* Tagline */}
+        {/* Tagline & Description */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-center space-y-4"
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="text-center space-y-5 mb-12"
         >
           <h2 className="text-3xl font-semibold text-[var(--setly-ink)] leading-tight">
-            From landing to belonging.
+            Your next move
           </h2>
-          <p className="text-lg text-[var(--setly-text-secondary)] leading-relaxed">
+          <p className="text-lg text-[var(--setly-text-secondary)] leading-relaxed max-w-sm mx-auto">
             Setly helps students and expats settle into a new place — faster, calmer, together.
           </p>
         </motion.div>
 
-        {/* CTA Button */}
+        {/* CTA Area */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="pt-8"
+          transition={{ delay: 1.5, duration: 0.6 }}
+          className="w-full space-y-4"
         >
           <button
             onClick={onNext}
-            className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-medium shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 active:scale-[0.98] transition-all"
+            className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 active:scale-[0.98] transition-all"
           >
-            See how
+            See how Setly works
           </button>
+          
+          <p className="text-sm text-center text-[var(--setly-muted)]">
+            Takes ~45 seconds · No signup
+          </p>
         </motion.div>
 
-        {/* Subtle indicator */}
+        {/* Swipe indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="flex justify-center pt-4"
+          transition={{ delay: 1.8, duration: 0.5 }}
+          className="flex justify-center mt-8"
         >
-          <div className="flex gap-2 text-xs text-[var(--setly-muted)]">
+          <div className="flex items-center gap-2 text-xs text-[var(--setly-muted)]">
             <span>Swipe to explore</span>
             <span>→</span>
           </div>

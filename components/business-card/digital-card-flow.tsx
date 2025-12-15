@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, PanInfo, useMotionValue, AnimatePresence } from "framer-motion";
 import { IdentityScreen } from "./screens/identity-screen";
 import { MomentScreen } from "./screens/moment-screen";
 import { ExperienceScreen } from "./screens/experience-screen";
@@ -16,33 +16,24 @@ const mainScreens: Screen[] = ["identity", "moment", "experience", "difference",
 
 export function DigitalCardFlow() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("identity");
-  const [direction, setDirection] = useState(1);
   const [selectedMoment, setSelectedMoment] = useState<string | null>(null);
-
+  const containerRef = useRef<HTMLDivElement>(null);
+  
   const currentIndex = mainScreens.indexOf(currentScreen);
+  const x = useMotionValue(0);
 
   const goToScreen = (screen: Screen) => {
-    const newIndex = mainScreens.indexOf(screen);
-    if (newIndex === -1) {
-      // Special screens (like waitlist) don't have an index
-      setDirection(1);
-      setCurrentScreen(screen);
-    } else {
-      setDirection(newIndex > currentIndex ? 1 : -1);
-      setCurrentScreen(screen);
-    }
+    setCurrentScreen(screen);
   };
 
   const nextScreen = () => {
     if (currentIndex < mainScreens.length - 1) {
-      setDirection(1);
       setCurrentScreen(mainScreens[currentIndex + 1]);
     }
   };
 
   const prevScreen = () => {
     if (currentIndex > 0) {
-      setDirection(-1);
       setCurrentScreen(mainScreens[currentIndex - 1]);
     }
   };
@@ -52,106 +43,231 @@ export function DigitalCardFlow() {
   };
 
   const goToWaitlist = () => {
-    setDirection(1);
     setCurrentScreen("waitlist");
   };
 
-  // Screen variants for smooth transitions
-  const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? "100%" : "-100%",
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction > 0 ? "-100%" : "100%",
-      opacity: 0,
-    }),
+  const restartFlow = () => {
+    setCurrentScreen("identity");
+    setSelectedMoment(null);
+  };
+
+  // Handle swipe with instant response
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const swipeThreshold = 40;
+    const velocityThreshold = 400;
+
+    const offset = info.offset.x;
+    const velocity = info.velocity.x;
+
+    // Swipe right (go back)
+    if (offset > swipeThreshold || velocity > velocityThreshold) {
+      if (currentScreen === "waitlist") {
+        goToScreen("story");
+      } else if (currentIndex > 0) {
+        prevScreen();
+      }
+    }
+    // Swipe left (go forward)
+    else if (offset < -swipeThreshold || velocity < -velocityThreshold) {
+      if (currentScreen !== "waitlist" && currentIndex < mainScreens.length - 1) {
+        nextScreen();
+      }
+    }
+  };
+
+  // Calculate transform based on current screen
+  const getScreenOffset = (screenIndex: number) => {
+    const diff = screenIndex - currentIndex;
+    return `${diff * 100}%`;
+  };
+
+  // Ultra-smooth iOS transitions with subtle directional blur
+  const screenTransition = {
+    type: "spring",
+    stiffness: 500,
+    damping: 50,
+    mass: 0.5,
+  };
+
+  // Micro blur effect during transitions (barely perceptible forward momentum cue)
+  const getMotionBlur = (isActive: boolean) => {
+    return isActive ? "blur(0px)" : "blur(1.5px)";
   };
 
   return (
-    <div className="fixed inset-0 bg-white overflow-hidden">
-      {/* Progress Indicator - Only show for main flow */}
-      {currentScreen !== "waitlist" && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-white overflow-hidden select-none">
+      {/* Arrival Moment */}
+      <AnimatePresence>
+        {currentScreen === "arrival" && (
+          <ArrivalMoment onComplete={() => setCurrentScreen("identity")} />
+        )}
+      </AnimatePresence>
+
+      {/* Progress Indicator */}
+      {currentScreen !== "waitlist" && currentScreen !== "arrival" && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm">
           <div className="flex gap-1 p-4 max-w-md mx-auto">
             {mainScreens.map((screen, idx) => (
-              <div
+              <button
                 key={screen}
-                className="flex-1 h-1 rounded-full bg-gray-200 overflow-hidden"
+                onClick={() => {
+                  const targetScreen = mainScreens[idx];
+                  if (targetScreen) setCurrentScreen(targetScreen);
+                }}
+                className="flex-1 h-1 rounded-full bg-gray-200 overflow-hidden cursor-pointer"
               >
                 <motion.div
                   className="h-full bg-[var(--setly-primary-blue)]"
-                  initial={{ width: "0%" }}
+                  initial={false}
                   animate={{
-                    width: idx < currentIndex ? "100%" : idx === currentIndex ? "100%" : "0%",
+                    width: idx <= currentIndex ? "100%" : "0%",
                   }}
-                  transition={{ duration: 0.3 }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.32, 0.72, 0, 1],
+                  }}
                 />
-              </div>
+              </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* Screen Container */}
-      <div className="relative h-full w-full">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
-          <motion.div
-            key={currentScreen}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 },
-            }}
-            className={currentScreen === "waitlist" ? "absolute inset-0" : "absolute inset-0 pt-16"}
-          >
-            {currentScreen === "identity" && (
-              <IdentityScreen onNext={nextScreen} />
-            )}
-            {currentScreen === "moment" && (
-              <MomentScreen
-                onNext={nextScreen}
-                onBack={prevScreen}
-                onSelectMoment={setSelectedMoment}
-              />
-            )}
-            {currentScreen === "experience" && (
-              <ExperienceScreen
-                onNext={nextScreen}
-                onBack={prevScreen}
-                selectedMoment={selectedMoment}
-              />
-            )}
-            {currentScreen === "difference" && (
-              <DifferenceScreen onNext={nextScreen} onBack={prevScreen} />
-            )}
-            {currentScreen === "founder" && (
-              <FounderScreen onNext={nextScreen} onBack={prevScreen} />
-            )}
-            {currentScreen === "story" && (
-              <StoryScreen
-                onNext={goToWaitlist}
-                onBack={prevScreen}
-                onExploreApp={goToMoment}
-              />
-            )}
-            {currentScreen === "waitlist" && (
-              <WaitlistScreen
-                onBack={() => goToScreen("story")}
-                onExploreApp={goToMoment}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      {/* Continuous Screen Container - All screens always rendered */}
+      {currentScreen !== "arrival" && (
+        <motion.div
+          ref={containerRef}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.1}
+          dragMomentum={false}
+          onDragEnd={handleDragEnd}
+          style={{ x }}
+          className={currentScreen === "waitlist" ? "absolute inset-0" : "absolute inset-0 pt-16"}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+        >
+        {/* Identity Screen */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ 
+            x: currentScreen === "identity" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(0),
+            opacity: currentScreen === "identity" ? 1 : 0,
+            filter: getMotionBlur(currentScreen === "identity"),
+            pointerEvents: currentScreen === "identity" ? "auto" : "none"
+          }}
+          transition={screenTransition}
+        >
+          <IdentityScreen onNext={nextScreen} />
+        </motion.div>
+
+        {/* Moment Screen */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ 
+            x: currentScreen === "moment" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(1),
+            opacity: currentScreen === "moment" ? 1 : 0,
+            filter: getMotionBlur(currentScreen === "moment"),
+            pointerEvents: currentScreen === "moment" ? "auto" : "none"
+          }}
+          transition={screenTransition}
+        >
+          <MomentScreen
+            onNext={nextScreen}
+            onBack={prevScreen}
+            onSelectMoment={setSelectedMoment}
+          />
+        </motion.div>
+
+        {/* Experience Screen */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ 
+            x: currentScreen === "experience" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(2),
+            opacity: currentScreen === "experience" ? 1 : 0,
+            filter: getMotionBlur(currentScreen === "experience"),
+            pointerEvents: currentScreen === "experience" ? "auto" : "none"
+          }}
+          transition={screenTransition}
+        >
+          <ExperienceScreen
+            onNext={nextScreen}
+            onBack={prevScreen}
+            selectedMoment={selectedMoment}
+          />
+        </motion.div>
+
+        {/* Difference Screen */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ 
+            x: currentScreen === "difference" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(3),
+            opacity: currentScreen === "difference" ? 1 : 0,
+            filter: getMotionBlur(currentScreen === "difference"),
+            pointerEvents: currentScreen === "difference" ? "auto" : "none"
+          }}
+          transition={screenTransition}
+        >
+          <DifferenceScreen onNext={nextScreen} onBack={prevScreen} />
+        </motion.div>
+
+        {/* Founder Screen */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ 
+            x: currentScreen === "founder" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(4),
+            opacity: currentScreen === "founder" ? 1 : 0,
+            filter: getMotionBlur(currentScreen === "founder"),
+            pointerEvents: currentScreen === "founder" ? "auto" : "none"
+          }}
+          transition={screenTransition}
+        >
+          <FounderScreen onNext={nextScreen} onBack={prevScreen} />
+        </motion.div>
+
+        {/* Story Screen */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ 
+            x: currentScreen === "story" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(5),
+            opacity: currentScreen === "story" ? 1 : 0,
+            filter: getMotionBlur(currentScreen === "story"),
+            pointerEvents: currentScreen === "story" ? "auto" : "none"
+          }}
+          transition={screenTransition}
+        >
+          <StoryScreen
+            onNext={goToWaitlist}
+            onBack={prevScreen}
+            onRestart={restartFlow}
+          />
+        </motion.div>
+
+        {/* Waitlist Screen */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ 
+            x: currentScreen === "waitlist" ? 0 : "100%",
+            opacity: currentScreen === "waitlist" ? 1 : 0,
+            pointerEvents: currentScreen === "waitlist" ? "auto" : "none"
+          }}
+          transition={screenTransition}
+        >
+          <WaitlistScreen
+            onBack={() => goToScreen("story")}
+            onExploreApp={goToMoment}
+          />
+        </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }

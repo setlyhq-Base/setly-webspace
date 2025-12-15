@@ -7,95 +7,73 @@ interface DifferenceScreenProps {
   onBack: () => void;
 }
 
-const differences = [
-  {
-    icon: "✓",
-    title: "Trusted",
-    description: "Verified community members only",
-  },
-  {
-    icon: "🤝",
-    title: "Community-driven",
-    description: "Built by Setlies, for Setlies",
-  },
-  {
-    icon: "💙",
-    title: "Lived experience",
-    description: "We've been exactly where you are",
-  },
-  {
-    icon: "🌱",
-    title: "For your journey",
-    description: "Start. Evolve. Thrive. Live your way.",
-  },
-];
-
 export function DifferenceScreen({ onNext, onBack }: DifferenceScreenProps) {
   return (
-    <div className="h-full flex flex-col px-6 py-8 bg-gradient-to-b from-white to-[var(--setly-primary-blue-soft)]">
-      <div className="max-w-md w-full mx-auto flex flex-col h-full">
-        {/* Header */}
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="mb-8"
-        >
-          <h2 className="text-3xl font-bold text-[var(--setly-ink)] mb-2">
-            Why it's different
-          </h2>
-          <p className="text-[var(--setly-text-secondary)]">
-            More than just another app
-          </p>
-        </motion.div>
+    <div className="h-full flex flex-col bg-white relative overflow-hidden">
+      <div className="relative z-10 flex flex-col h-full px-8 py-12">
+        <div className="max-w-sm w-full mx-auto flex flex-col h-full justify-between">
+          
+          {/* The one belief - centered, calm, powerful */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex-1 flex flex-col justify-center text-center -mt-8"
+          >
+            <h2 className="text-[40px] leading-[1.15] font-bold text-[var(--setly-ink)] mb-8">
+              Real people<br />
+              helping real people
+            </h2>
+            
+            <p className="text-lg text-[var(--setly-text-secondary)] leading-relaxed mb-6">
+              No corporations.<br />
+              No algorithms optimizing for ads.<br />
+              No strangers you can't trust.
+            </p>
 
-        {/* Difference Cards */}
-        <div className="flex-1 space-y-4 overflow-y-auto pb-6">
-          {differences.map((item, index) => (
             <motion.div
-              key={index}
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1, duration: 0.4 }}
-              className="bg-white rounded-2xl p-6 shadow-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="text-base text-[var(--setly-ink)] leading-relaxed font-medium"
             >
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-[var(--setly-primary-blue-soft)] flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl">{item.icon}</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-[var(--setly-ink)] mb-1">
-                    {item.title}
-                  </h3>
-                  <p className="text-[var(--setly-text-secondary)]">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
+              Just a verified community,<br />
+              built by people who've been<br />
+              exactly where you are.
             </motion.div>
-          ))}
-        </div>
+          </motion.div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.4 }}
-          className="space-y-3"
-        >
-          <button
-            onClick={onNext}
-            className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-medium shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all"
+          {/* Bridge - creates emotional transition */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.7 }}
+            className="mb-8"
           >
-            Meet the founder
-          </button>
-          <button
-            onClick={onBack}
-            className="w-full text-[var(--setly-text-secondary)] py-2 text-sm"
-          >
-            ← Back
-          </button>
-        </motion.div>
+            <div className="text-center mb-6">
+              <p className="text-sm text-[var(--setly-text-secondary)]/60 italic leading-relaxed">
+                This belief didn't come from a boardroom.<br />
+                It came from lived experience.
+              </p>
+            </div>
+
+            {/* CTA - feels inevitable */}
+            <div className="space-y-3">
+              <button
+                onClick={onNext}
+                className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 active:scale-[0.98] transition-all"
+              >
+                Meet the founder
+              </button>
+              <button
+                onClick={onBack}
+                className="w-full text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)] py-2 text-sm font-medium transition-colors"
+              >
+                ← Back
+              </button>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
