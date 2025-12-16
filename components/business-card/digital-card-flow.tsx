@@ -51,10 +51,10 @@ export function DigitalCardFlow() {
     setSelectedMoment(null);
   };
 
-  // Handle swipe with instant response
+  // Handle swipe with instant response - Apple-calibrated thresholds
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const swipeThreshold = 40;
-    const velocityThreshold = 400;
+    const swipeThreshold = 50;
+    const velocityThreshold = 500;
 
     const offset = info.offset.x;
     const velocity = info.velocity.x;
@@ -81,12 +81,13 @@ export function DigitalCardFlow() {
     return `${diff * 100}%`;
   };
 
-  // Ultra-smooth iOS transitions with subtle directional blur
+  // Apple-calibrated spring physics - matches iOS native screen transitions
   const screenTransition = {
-    type: "spring",
-    stiffness: 500,
-    damping: 50,
-    mass: 0.5,
+    type: "spring" as const,
+    stiffness: 380,
+    damping: 30,
+    mass: 0.8,
+    velocity: 0,
   };
 
   // Micro blur effect during transitions (barely perceptible forward momentum cue)
@@ -96,15 +97,8 @@ export function DigitalCardFlow() {
 
   return (
     <div className="fixed inset-0 bg-white overflow-hidden select-none">
-      {/* Arrival Moment */}
-      <AnimatePresence>
-        {currentScreen === "arrival" && (
-          <ArrivalMoment onComplete={() => setCurrentScreen("identity")} />
-        )}
-      </AnimatePresence>
-
       {/* Progress Indicator */}
-      {currentScreen !== "waitlist" && currentScreen !== "arrival" && (
+      {currentScreen !== "waitlist" && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm">
           <div className="flex gap-1 p-4 max-w-md mx-auto">
             {mainScreens.map((screen, idx) => (
@@ -123,8 +117,9 @@ export function DigitalCardFlow() {
                     width: idx <= currentIndex ? "100%" : "0%",
                   }}
                   transition={{
-                    duration: 0.3,
-                    ease: [0.32, 0.72, 0, 1],
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 28,
                   }}
                 />
               </button>
@@ -134,13 +129,13 @@ export function DigitalCardFlow() {
       )}
 
       {/* Continuous Screen Container - All screens always rendered */}
-      {currentScreen !== "arrival" && (
-        <motion.div
+      <motion.div
           ref={containerRef}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.1}
+          dragElastic={0.2}
           dragMomentum={false}
+          dragTransition={{ bounceStiffness: 600, bounceDamping: 40 }}
           onDragEnd={handleDragEnd}
           style={{ x }}
           className={currentScreen === "waitlist" ? "absolute inset-0" : "absolute inset-0 pt-16"}
@@ -265,9 +260,8 @@ export function DigitalCardFlow() {
             onBack={() => goToScreen("story")}
             onExploreApp={goToMoment}
           />
+          </motion.div>
         </motion.div>
-        </motion.div>
-      )}
     </div>
   );
 }

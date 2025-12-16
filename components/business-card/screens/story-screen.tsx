@@ -44,7 +44,7 @@ export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
           <motion.div
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ type: "spring", stiffness: 280, damping: 28, delay: 0.1 }}
             className="flex-1 flex flex-col justify-center text-center -mt-12"
           >
             <h2 className="text-[36px] leading-[1.2] font-bold text-[var(--setly-ink)] mb-6">
@@ -55,7 +55,7 @@ export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
+              transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.3 }}
               className="text-base text-[var(--setly-text-secondary)] leading-relaxed"
             >
               A platform to help you settle into a new place —<br />
@@ -67,7 +67,7 @@ export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.7 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.5 }}
             className="space-y-4 mb-6"
           >
             {/* Primary: Keep Setly - gentle emphasis */}
@@ -129,7 +129,7 @@ export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
+            transition={{ type: "spring", stiffness: 240, damping: 24, delay: 0.7 }}
             className="flex items-center justify-between text-sm"
           >
             <button

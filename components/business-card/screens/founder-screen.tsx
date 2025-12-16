@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface FounderScreenProps {
   onNext: () => void;
@@ -8,74 +9,120 @@ interface FounderScreenProps {
 }
 
 export function FounderScreen({ onNext, onBack }: FounderScreenProps) {
+  const [isFlipped, setIsFlipped] = useState(false);
+
   return (
     <div className="h-full flex flex-col bg-gradient-to-b from-white via-white to-[var(--setly-primary-blue)]/[0.02] relative overflow-hidden">
       <div className="relative z-10 flex flex-col h-full px-8 py-10">
         <div className="max-w-sm w-full mx-auto flex flex-col h-full justify-between">
           
-          {/* The human moment */}
+          {/* The flip card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex-1 flex flex-col justify-center -mt-6"
+            transition={{ type: "spring", stiffness: 280, damping: 28, delay: 0.1 }}
+            className="flex-1 flex flex-col justify-center -mt-6 perspective-1000"
           >
-            {/* Photo - intimate, not profile */}
-            <div className="w-28 h-28 rounded-full mx-auto mb-6 shadow-xl overflow-hidden ring-4 ring-white">
-              <img 
-                src="/kiran_builder.jpg" 
-                alt="Kiran" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Story - one continuous flow */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="space-y-6 text-center"
+            <div 
+              className="relative w-full cursor-pointer"
+              style={{ transformStyle: "preserve-3d" }}
+              onClick={() => setIsFlipped(!isFlipped)}
             >
-              <p className="text-lg text-[var(--setly-ink)] leading-relaxed font-medium">
-                I moved to the U.S. for grad school.
-              </p>
-
-              <p className="text-base text-[var(--setly-text-secondary)] leading-relaxed px-2">
-                I remember the chaos — finding housing, getting rides, buying essentials, feeling completely lost in a new place.
-              </p>
-
+              {/* FRONT SIDE - Emotional / Human */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6, duration: 0.8 }}
-                className="pt-4"
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                style={{ 
+                  backfaceVisibility: "hidden",
+                  transformStyle: "preserve-3d"
+                }}
+                className={isFlipped ? "hidden" : "block"}
               >
-                <p className="text-base text-[var(--setly-ink)] leading-relaxed px-2">
-                  Setly is what I wish existed when I landed.
-                </p>
-                <p className="text-base text-[var(--setly-text-secondary)] leading-relaxed mt-4 px-2">
-                  You're not alone.<br />
-                  You'll figure this out.
-                </p>
+                {/* Photo - intimate, not profile */}
+                <div className="w-28 h-28 rounded-full mx-auto mb-6 shadow-xl overflow-hidden ring-4 ring-white">
+                  <img 
+                    src="/kiran_builder.jpg" 
+                    alt="Kiran" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Emotional content */}
+                <div className="space-y-6 text-center">
+                  <h2 className="text-2xl text-[var(--setly-ink)] leading-relaxed font-semibold px-2">
+                    I've been exactly where you are.
+                  </h2>
+
+                  <p className="text-base text-[var(--setly-text-secondary)] leading-relaxed px-2">
+                    I moved to the U.S. and felt the chaos firsthand —
+                    finding housing, getting rides, buying essentials,
+                    and feeling completely lost in a new place.
+                  </p>
+
+                  <p className="text-base text-[var(--setly-ink)] leading-relaxed px-2 font-medium pt-2">
+                    Setly is what I wish existed when I landed.
+                  </p>
+
+                  {/* Signature */}
+                  <div className="pt-4 text-sm text-[var(--setly-text-secondary)]/60">
+                    — Kiran
+                  </div>
+
+                  {/* Flip hint */}
+                  <div className="pt-6 text-sm text-[var(--setly-primary-blue)] font-medium">
+                    Tap to see what Setly is →
+                  </div>
+                </div>
               </motion.div>
 
-              {/* Signature - personal touch */}
+              {/* BACK SIDE - Business / Product Meaning */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.9, duration: 0.6 }}
-                className="pt-4 text-sm text-[var(--setly-text-secondary)]/60"
+                animate={{ rotateY: isFlipped ? 0 : -180 }}
+                transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                style={{ 
+                  backfaceVisibility: "hidden",
+                  transformStyle: "preserve-3d"
+                }}
+                className={!isFlipped ? "hidden" : "block"}
               >
-                — Kiran
+                <div className="space-y-6 text-center px-2">
+                  <h2 className="text-2xl text-[var(--setly-ink)] leading-tight font-bold">
+                    What is Setly?
+                  </h2>
+
+                  <p className="text-base text-[var(--setly-text-secondary)] font-medium">
+                    Setly = Settle + Easily
+                  </p>
+
+                  <p className="text-base text-[var(--setly-ink)] leading-relaxed">
+                    Setly helps students and expats settle into a new place —
+                    faster, calmer, together.
+                  </p>
+
+                  <p className="text-base text-[var(--setly-text-secondary)] leading-relaxed">
+                    It brings housing, rides, essentials, and community
+                    into one trusted place, built from lived experience —
+                    not corporate assumptions.
+                  </p>
+
+                  <p className="text-sm text-[var(--setly-ink)] leading-relaxed pt-4 font-medium italic">
+                    You're not alone. You'll figure this out.
+                  </p>
+
+                  {/* Flip hint */}
+                  <div className="pt-6 text-sm text-[var(--setly-primary-blue)] font-medium">
+                    ← Tap to flip back
+                  </div>
+                </div>
               </motion.div>
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* Forward momentum - not conclusion */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0, duration: 0.7 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.3 }}
             className="space-y-4"
           >
             {/* Contact - subtle, not dominant */}

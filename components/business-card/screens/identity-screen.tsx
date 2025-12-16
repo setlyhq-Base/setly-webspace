@@ -43,7 +43,7 @@ export function IdentityScreen({ onNext }: IdentityScreenProps) {
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
+          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 1.2 }}
           className="text-center space-y-5 mb-12"
         >
           <h2 className="text-3xl font-semibold text-[var(--setly-ink)] leading-tight">
@@ -58,7 +58,7 @@ export function IdentityScreen({ onNext }: IdentityScreenProps) {
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.6 }}
+          transition={{ type: "spring", stiffness: 280, damping: 28, delay: 1.5 }}
           className="w-full space-y-4"
         >
           <button
@@ -77,7 +77,7 @@ export function IdentityScreen({ onNext }: IdentityScreenProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.8, duration: 0.5 }}
+          transition={{ type: "spring", stiffness: 240, damping: 24, delay: 1.8 }}
           className="flex justify-center mt-8"
         >
           <div className="flex items-center gap-2 text-xs text-[var(--setly-muted)]">
