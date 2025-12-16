@@ -260,8 +260,8 @@ export function DigitalCardFlow() {
             onBack={() => goToScreen("story")}
             onExploreApp={goToMoment}
           />
-          </motion.div>
         </motion.div>
+      </motion.div>
     </div>
   );
 }
