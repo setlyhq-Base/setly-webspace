@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion, PanInfo, useMotionValue, AnimatePresence } from "framer-motion";
+import { motion, PanInfo, useMotionValue } from "framer-motion";
 import { IdentityScreen } from "./screens/identity-screen";
 import { MomentScreen } from "./screens/moment-screen";
 import { ExperienceScreen } from "./screens/experience-screen";
