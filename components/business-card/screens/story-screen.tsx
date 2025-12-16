@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { DigitalBusinessCard } from "../digital-business-card";
 
 interface StoryScreenProps {
   onNext: () => void;
@@ -9,13 +11,10 @@ interface StoryScreenProps {
 }
 
 export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
+  const [isCardOpen, setIsCardOpen] = useState(false);
   
   const handleAddToHomeScreen = () => {
-    if (typeof navigator !== 'undefined' && 'share' in navigator) {
-      alert("Tap the Share button, then 'Add to Home Screen' to save Setly");
-    } else {
-      alert("To save Setly: Tap Share → Add to Home Screen");
-    }
+    setIsCardOpen(true);
   };
 
   const handleShare = async () => {
@@ -152,6 +151,9 @@ export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
           </motion.div>
         </div>
       </div>
+
+      {/* Digital Business Card Overlay */}
+      <DigitalBusinessCard isOpen={isCardOpen} onClose={() => setIsCardOpen(false)} />
     </div>
   );
 }
