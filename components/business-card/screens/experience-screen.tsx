@@ -249,9 +249,9 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
         <div className="max-w-md w-full mx-auto flex flex-col h-full">
           {/* Context badge - subtle */}
           <motion.div
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 260, damping: 26 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
             className="mb-4"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 text-[var(--setly-text-secondary)] text-xs font-medium">
@@ -262,9 +262,9 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
 
           {/* Header - clear hierarchy */}
           <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
             className="mb-6"
           >
             <h2 className="text-2xl font-bold text-[var(--setly-ink)] mb-3 leading-tight">
@@ -272,12 +272,12 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
             </h2>
           </motion.div>
 
-          {/* Category Navigation - ABOVE the card */}
+          {/* Category Navigation - Calm, minimal */}
           <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.15 }}
-            className="flex items-center justify-center gap-4 mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
+            className="flex items-center justify-center gap-2 mb-6"
           >
             {orderedFeatures.map((feature) => {
               const isActive = activeFeature === feature.id;
@@ -286,52 +286,45 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
                 <button
                   key={feature.id}
                   onClick={() => setActiveFeature(feature.id)}
-                  className="relative group transition-all"
+                  className="relative transition-all duration-300"
                   title={feature.title}
                 >
+                  {/* Simple dot indicator */}
                   <div 
                     className={`
-                      flex items-center justify-center transition-all duration-300
+                      rounded-full transition-all duration-300
                       ${isActive 
-                        ? 'w-12 h-12 rounded-xl' 
-                        : 'w-9 h-9 rounded-lg opacity-30 hover:opacity-60'
+                        ? 'w-2 h-2' 
+                        : 'w-1.5 h-1.5 opacity-25 hover:opacity-40'
                       }
                     `}
                     style={{
-                      backgroundColor: isActive ? `${feature.accentColor}10` : 'transparent'
+                      backgroundColor: isActive ? feature.accentColor : '#94a3b8'
                     }}
-                  >
-                    <div 
-                      className="transition-all duration-300"
-                      style={{ 
-                        color: isActive ? feature.accentColor : 'var(--setly-text-secondary)'
-                      }}
-                    >
-                      {feature.iconSmall}
-                    </div>
-                  </div>
+                  />
                 </button>
               );
             })}
           </motion.div>
 
-          {/* Feature Card - Premium, intentional */}
+          {/* Feature Card - Premium physical object */}
           <div className="flex-1 min-h-0">
-            {/* Single persistent card container */}
+            {/* Card shell - dimensional, refined */}
             <div 
               onClick={handleCardTap}
-              className="relative h-full rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] bg-white cursor-pointer border border-gray-100/50 overflow-hidden"
+              className="relative h-full rounded-[28px] cursor-pointer overflow-hidden"
+              style={{
+                boxShadow: '0 2px 12px rgba(0,0,0,0.04), 0 12px 48px rgba(0,0,0,0.06)',
+              }}
             >
-              {/* Flip container - preserves card shape */}
+              {/* Flip container - single physical card */}
               <motion.div
                 animate={{
                   rotateY: isFlipped ? 180 : 0,
                 }}
                 transition={{
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 30,
-                  mass: 1,
+                  duration: 0.6,
+                  ease: [0.23, 1, 0.32, 1], // Calm easeOutQuint
                 }}
                 style={{
                   transformStyle: "preserve-3d",
@@ -339,92 +332,12 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
                 className="relative h-full"
               >
                 {/* Front - What usually goes wrong */}
-                <motion.div
+                <div
                   style={{
                     backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
                   }}
-                  className="absolute inset-0 flex flex-col"
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeFeature}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ 
-                        type: "spring", 
-                        stiffness: 300, 
-                        damping: 32,
-                        mass: 0.8 
-                      }}
-                      className="h-full flex flex-col p-8"
-                    >
-                      {/* Subtle icon - supportive, not dominant */}
-                      <div className="flex items-center gap-4 mb-8">
-                        <div 
-                          className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: `${currentFeature.accentColor}08` }}
-                        >
-                          <div 
-                            className="w-6 h-6"
-                            style={{ color: currentFeature.accentColor }}
-                          >
-                            {currentFeature.iconSmall}
-                          </div>
-                        </div>
-                        <h3 className="text-2xl font-semibold text-[var(--setly-ink)]">
-                          {currentFeature.title}
-                        </h3>
-                      </div>
-
-                      {/* Problem section - scannable */}
-                      <div className="flex-1 space-y-4">
-                        <h4 className="text-xs uppercase tracking-wider text-[var(--setly-text-secondary)]/60 font-medium mb-4">
-                          What usually goes wrong
-                        </h4>
-                        <div className="space-y-2.5">
-                          {currentFeature.problems.map((problem, idx) => (
-                            <motion.div
-                              key={idx}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ 
-                                delay: idx * 0.06,
-                                type: "spring",
-                                stiffness: 300,
-                                damping: 30
-                              }}
-                              className="flex items-start gap-2.5"
-                            >
-                              <div 
-                                className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
-                                style={{ backgroundColor: `${currentFeature.accentColor}40` }}
-                              />
-                              <p className="text-[15px] text-[var(--setly-text-secondary)] leading-relaxed">
-                                {problem}
-                              </p>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Tap hint - minimal */}
-                      <div className="mt-6 pt-6 border-t border-gray-100">
-                        <p className="text-xs text-center text-[var(--setly-text-secondary)]/50">
-                          Tap to see how Setly helps
-                        </p>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </motion.div>
-
-                {/* Back - How Setly helps */}
-                <motion.div
-                  style={{
-                    backfaceVisibility: "hidden",
-                    transform: "rotateY(180deg)",
-                  }}
-                  className="absolute inset-0 flex flex-col"
+                  className="absolute inset-0"
                 >
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -432,91 +345,145 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ 
+                        duration: 0.3,
+                        ease: [0.23, 1, 0.32, 1]
+                      }}
                       className="h-full flex flex-col p-8"
-                      style={{ 
-                        background: `linear-gradient(135deg, ${currentFeature.accentColor}03 0%, ${currentFeature.accentColor}08 100%)` 
+                      style={{
+                        background: `linear-gradient(135deg, ${currentFeature.lightAccent} 0%, #ffffff 100%)`,
                       }}
                     >
-                      {/* Icon stays consistent - same size, same position */}
-                      <div className="flex items-center gap-4 mb-8">
-                        <div 
-                          className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: `${currentFeature.accentColor}12` }}
-                        >
-                          <div 
-                            className="w-6 h-6"
-                            style={{ color: currentFeature.accentColor }}
-                          >
-                            {currentFeature.iconSmall}
-                          </div>
-                        </div>
-                        <h3 className="text-2xl font-semibold text-[var(--setly-ink)]">
+                      {/* Header - locked structure */}
+                      <div className="mb-10">
+                        <h3 className="text-[22px] font-semibold text-[var(--setly-ink)] mb-1">
                           {currentFeature.title}
                         </h3>
+                        <p className="text-sm text-[var(--setly-text-secondary)]/70">
+                          {currentFeature.description}
+                        </p>
                       </div>
 
-                      {/* Solution section - scannable, confident */}
-                      <div className="flex-1 space-y-4">
+                      {/* Problem section */}
+                      <div className="flex-1">
+                        <h4 className="text-[11px] uppercase tracking-wider text-[var(--setly-text-secondary)]/50 font-medium mb-5">
+                          What usually goes wrong
+                        </h4>
+                        <div className="space-y-3">
+                          {currentFeature.problems.slice(0, 4).map((problem, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-start gap-3"
+                            >
+                              <div 
+                                className="w-1 h-1 rounded-full mt-[7px] flex-shrink-0 opacity-40"
+                                style={{ backgroundColor: currentFeature.accentColor }}
+                              />
+                              <p className="text-[15px] text-[var(--setly-text-secondary)] leading-[1.5]">
+                                {problem}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Tap hint - subtle */}
+                      <div className="mt-8 pt-5 border-t border-black/5">
+                        <p className="text-[11px] text-center text-[var(--setly-text-secondary)]/40 tracking-wide">
+                          TAP TO SEE HOW SETLY HELPS
+                        </p>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                {/* Back - How Setly helps */}
+                <div
+                  style={{
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                    transform: "rotateY(180deg)",
+                  }}
+                  className="absolute inset-0"
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeFeature}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ 
+                        duration: 0.3,
+                        ease: [0.23, 1, 0.32, 1]
+                      }}
+                      className="h-full flex flex-col p-8"
+                      style={{
+                        background: `linear-gradient(135deg, ${currentFeature.accentColor}08 0%, ${currentFeature.accentColor}04 100%)`,
+                      }}
+                    >
+                      {/* Header - same structure as front */}
+                      <div className="mb-10">
+                        <h3 className="text-[22px] font-semibold text-[var(--setly-ink)] mb-1">
+                          {currentFeature.title}
+                        </h3>
+                        <p className="text-sm text-[var(--setly-text-secondary)]/70">
+                          {currentFeature.description}
+                        </p>
+                      </div>
+
+                      {/* Solution section */}
+                      <div className="flex-1">
                         <h4 
-                          className="text-xs uppercase tracking-wider font-medium mb-4"
-                          style={{ color: `${currentFeature.accentColor}` }}
+                          className="text-[11px] uppercase tracking-wider font-medium mb-5"
+                          style={{ color: currentFeature.accentColor, opacity: 0.7 }}
                         >
                           How Setly helps
                         </h4>
-                        <div className="space-y-2.5">
-                          {currentFeature.solutions.map((solution, idx) => (
-                            <motion.div
+                        <div className="space-y-3">
+                          {currentFeature.solutions.slice(0, 4).map((solution, idx) => (
+                            <div
                               key={idx}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ 
-                                delay: idx * 0.06,
-                                type: "spring",
-                                stiffness: 300,
-                                damping: 30
-                              }}
-                              className="flex items-start gap-2.5"
+                              className="flex items-start gap-3"
                             >
                               <div 
-                                className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
+                                className="w-1 h-1 rounded-full mt-[7px] flex-shrink-0"
                                 style={{ backgroundColor: currentFeature.accentColor }}
                               />
-                              <p className="text-[15px] text-[var(--setly-ink)] leading-relaxed font-medium">
+                              <p className="text-[15px] text-[var(--setly-ink)] leading-[1.5] font-medium">
                                 {solution}
                               </p>
-                            </motion.div>
+                            </div>
                           ))}
                         </div>
 
-                        {/* Why it works - calm justification */}
+                        {/* Why it works - subtle credibility */}
                         {currentFeature.whyItWorks && (
-                          <div className="mt-6 pt-6 border-t border-gray-200/30">
-                            <p className="text-[13px] text-[var(--setly-text-secondary)] leading-relaxed">
+                          <div className="mt-8 pt-6 border-t border-black/5">
+                            <p className="text-[13px] text-[var(--setly-text-secondary)]/80 leading-[1.6]">
                               {currentFeature.whyItWorks}
                             </p>
                           </div>
                         )}
                       </div>
 
-                      {/* Tap hint - minimal */}
-                      <div className="mt-6 pt-6 border-t border-gray-100">
-                        <p className="text-xs text-center text-[var(--setly-text-secondary)]/50">
-                          Tap to flip back
+                      {/* Tap hint - subtle */}
+                      <div className="mt-8 pt-5 border-t border-black/5">
+                        <p className="text-[11px] text-center text-[var(--setly-text-secondary)]/40 tracking-wide">
+                          TAP TO FLIP BACK
                         </p>
                       </div>
                     </motion.div>
                   </AnimatePresence>
-                </motion.div>
+                </div>
               </motion.div>
             </div>
           </div>
 
         {/* Bottom Continue - Strong anchor */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.3 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
           className="mt-6"
         >
           <button
