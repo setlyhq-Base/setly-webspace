@@ -230,213 +230,192 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
   return (
     <div className="h-full flex flex-col px-6 py-8 bg-white">
       <div className="max-w-md w-full mx-auto flex flex-col h-full">
-        {/* Context badge */}
+        {/* Context badge - subtle */}
         <motion.div
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="mb-4"
+          transition={{ type: "spring", stiffness: 260, damping: 26 }}
+          className="mb-6"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--setly-primary-blue-soft)] text-[var(--setly-primary-blue)] text-sm font-medium">
-            <span>✓</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 text-[var(--setly-text-secondary)] text-xs font-medium">
+            <span className="text-[var(--setly-primary-blue)]">✓</span>
             <span>{context.label}</span>
           </div>
         </motion.div>
 
-        {/* Header - contextualized */}
+        {/* Header - clear hierarchy */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.4 }}
-          className="mb-6"
+          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.1 }}
+          className="mb-8"
         >
-          <h2 className="text-2xl font-bold text-[var(--setly-ink)] mb-2 leading-tight">
+          <h2 className="text-2xl font-bold text-[var(--setly-ink)] mb-3 leading-tight">
             {context.headline}
           </h2>
-          <p className="text-[var(--setly-text-secondary)] text-sm">
-            {isFlipped ? "Tap card to see overview" : "Tap card to see how Setly solves this"}
-          </p>
         </motion.div>
 
-        {/* Feature Preview Card - Flippable */}
-        <div className="flex-1 mb-6 perspective-1000">
-          <motion.button
-            onClick={handleCardTap}
-            className="relative w-full h-full preserve-3d cursor-pointer"
-            animate={{ rotateY: isFlipped ? 180 : 0 }}
-            transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-          >
-            {/* Front of card */}
-            <div
-              className="absolute inset-0 rounded-3xl shadow-xl backface-hidden bg-white"
-              style={{ 
-                backfaceVisibility: "hidden",
-              }}
+        {/* Feature Card - Calm, focused */}
+        <div className="flex-1 mb-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeFeature}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              onClick={handleCardTap}
+              className="relative h-full rounded-3xl shadow-lg bg-white cursor-pointer overflow-hidden"
             >
-              <div className="h-full flex flex-col p-6">
-                {/* Header section with icon */}
-                <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gray-100">
-                  <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm transition-all"
-                    style={{ backgroundColor: currentFeature.lightAccent }}
+              <AnimatePresence mode="wait">
+                {!isFlipped ? (
+                  /* Front - What it does */
+                  <motion.div
+                    key="front"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-full flex flex-col p-8"
                   >
-                    <div style={{ color: currentFeature.accentColor }}>
-                      {currentFeature.icon}
-                    </div>
-                  </div>
-                  
-                  <div className="flex-1 text-left">
-                    <h3 className="text-xl font-bold text-[var(--setly-ink)] mb-0.5">
-                      {currentFeature.title}
-                    </h3>
-                    <p className="text-sm text-[var(--setly-text-secondary)]">
-                      {currentFeature.description}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Stats section - structured grid */}
-                <motion.div 
-                  key={currentFeature.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="mb-6"
-                >
-                  <div className="grid grid-cols-3 gap-3">
-                    {currentFeature.stats.map((stat, idx) => (
-                      <div key={idx} className="text-center p-3 rounded-xl" style={{ backgroundColor: currentFeature.lightAccent }}>
-                        <div className="text-xl font-bold mb-1" style={{ color: currentFeature.accentColor }}>
-                          {stat.value}
-                        </div>
-                        <div className="text-xs text-[var(--setly-text-secondary)] font-medium">
-                          {stat.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-
-                {/* Features preview list */}
-                <div className="space-y-2 mb-6">
-                  {currentFeature.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm">
-                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: currentFeature.accentColor }} />
-                      <span className="text-[var(--setly-text-secondary)]">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Tap hint */}
-                <div className="mt-auto pt-4 border-t border-gray-100 text-center">
-                  <div className="text-xs text-[var(--setly-muted)] flex items-center justify-center gap-1.5">
-                    <span className="text-base" style={{ color: currentFeature.accentColor }}>↻</span>
-                    <span>Tap to see problems vs solutions</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Back of card */}
-            <div
-              className="absolute inset-0 rounded-3xl shadow-xl backface-hidden"
-              style={{ 
-                backgroundColor: currentFeature.lightAccent,
-                backfaceVisibility: "hidden",
-                transform: "rotateY(180deg)",
-              }}
-            >
-              <div className="h-full flex flex-col p-6 overflow-y-auto">
-                {/* Problems section */}
-                <div className="mb-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xl">❌</span>
-                    <h4 className="text-sm font-bold text-[var(--setly-ink)] uppercase tracking-wide">
-                      What usually goes wrong
-                    </h4>
-                  </div>
-                  <div className="space-y-2">
-                    {currentFeature.problems.map((problem, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start gap-2 text-sm text-[var(--setly-text-secondary)]"
-                      >
-                        <span className="text-red-400 mt-0.5">•</span>
-                        <span>{problem}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Solutions section */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xl">✓</span>
-                    <h4 className="text-sm font-bold uppercase tracking-wide"
-                      style={{ color: currentFeature.accentColor }}
+                    {/* Icon - refined, calm */}
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 280, damping: 28, delay: 0.1 }}
+                      className="mb-8"
                     >
-                      How Setly fixes this
-                    </h4>
-                  </div>
-                  <div className="space-y-2">
-                    {currentFeature.solutions.map((solution, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start gap-2 text-sm text-[var(--setly-ink)]"
+                      <div 
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                        style={{ backgroundColor: `${currentFeature.accentColor}10` }}
                       >
-                        <span style={{ color: currentFeature.accentColor }} className="mt-0.5">✓</span>
-                        <span>{solution}</span>
+                        <div style={{ color: currentFeature.accentColor }}>
+                          {currentFeature.icon}
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                    </motion.div>
+                    
+                    {/* Clear headline */}
+                    <div className="flex-1">
+                      <h3 className="text-3xl font-bold text-[var(--setly-ink)] mb-4 leading-tight">
+                        {currentFeature.title}
+                      </h3>
+                      <p className="text-lg text-[var(--setly-text-secondary)] leading-relaxed mb-8">
+                        {currentFeature.description}
+                      </p>
 
-                {/* Flip hint */}
-                <div className="text-xs text-[var(--setly-muted)] text-center pt-4 flex items-center justify-center gap-1">
-                  <span>↻</span>
-                  <span>Tap to flip back</span>
-                </div>
-              </div>
-            </div>
-          </motion.button>
+                      {/* Key point - single strong supporting line */}
+                      <div className="p-4 rounded-2xl bg-gray-50">
+                        <p className="text-sm text-[var(--setly-ink)] leading-relaxed">
+                          {currentFeature.preview}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Subtle tap hint */}
+                    <div className="mt-6 text-center">
+                      <p className="text-xs text-[var(--setly-text-secondary)]/60">
+                        Tap to see how Setly solves this
+                      </p>
+                    </div>
+                  </motion.div>
+                ) : (
+                  /* Back - How Setly helps */
+                  <motion.div
+                    key="back"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-full flex flex-col p-8"
+                    style={{ backgroundColor: `${currentFeature.accentColor}05` }}
+                  >
+                    {/* Icon stays consistent */}
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 280, damping: 28, delay: 0.1 }}
+                      className="mb-8"
+                    >
+                      <div 
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                        style={{ backgroundColor: `${currentFeature.accentColor}10` }}
+                      >
+                        <div style={{ color: currentFeature.accentColor }}>
+                          {currentFeature.icon}
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    <div className="flex-1 space-y-6">
+                      {/* The problem */}
+                      <div>
+                        <h4 className="text-xs uppercase tracking-wide text-[var(--setly-text-secondary)]/60 mb-3 font-medium">
+                          What usually goes wrong
+                        </h4>
+                        <p className="text-base text-[var(--setly-text-secondary)] leading-relaxed">
+                          {currentFeature.problems.join('. ')}
+                        </p>
+                      </div>
+
+                      {/* The solution */}
+                      <div>
+                        <h4 
+                          className="text-xs uppercase tracking-wide mb-3 font-medium"
+                          style={{ color: currentFeature.accentColor }}
+                        >
+                          How Setly helps
+                        </h4>
+                        <p className="text-base text-[var(--setly-ink)] leading-relaxed font-medium">
+                          {currentFeature.solutions.join('. ')}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Subtle tap hint */}
+                    <div className="mt-6 text-center">
+                      <p className="text-xs text-[var(--setly-text-secondary)]/60">
+                        Tap to flip back
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Minimal Category Dots - Subtle navigation */}
-        <div className="flex items-center justify-center gap-3 mb-6">
-          {orderedFeatures.map((feature, index) => {
+        {/* Minimal Category Navigation - refined icons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.2 }}
+          className="flex items-center justify-center gap-4 mb-8"
+        >
+          {orderedFeatures.map((feature) => {
             const isActive = activeFeature === feature.id;
-            const isPriority = index === 0;
             
             return (
-              <motion.button
+              <button
                 key={feature.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 + index * 0.05, duration: 0.3 }}
                 onClick={() => setActiveFeature(feature.id)}
-                className="relative group"
+                className="relative group transition-all"
                 title={feature.title}
               >
-                {/* Priority indicator */}
-                {isPriority && !isActive && (
-                  <div className="absolute -top-1 -right-1 w-1 h-1 rounded-full bg-[var(--setly-primary-blue)]" />
-                )}
-                
-                {/* Icon container */}
                 <div 
                   className={`
                     flex items-center justify-center transition-all duration-300
                     ${isActive 
-                      ? 'w-9 h-9 rounded-xl shadow-sm' 
-                      : 'w-7 h-7 rounded-lg opacity-40 hover:opacity-70'
+                      ? 'w-12 h-12 rounded-xl' 
+                      : 'w-9 h-9 rounded-lg opacity-30 hover:opacity-60'
                     }
                   `}
                   style={{
-                    backgroundColor: isActive ? feature.lightAccent : 'transparent'
+                    backgroundColor: isActive ? `${feature.accentColor}10` : 'transparent'
                   }}
                 >
                   <div 
-                    className="transition-colors duration-300"
+                    className="transition-all duration-300"
                     style={{ 
                       color: isActive ? feature.accentColor : 'var(--setly-text-secondary)'
                     }}
@@ -444,27 +423,27 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
                     {feature.iconSmall}
                   </div>
                 </div>
-              </motion.button>
+              </button>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Bottom CTA */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.4 }}
+          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.3 }}
           className="space-y-3"
         >
           <button
             onClick={onNext}
-            className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-medium shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all"
+            className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 active:scale-[0.98] transition-all"
           >
-            Why it's different
+            Continue
           </button>
           <button
             onClick={onBack}
-            className="w-full text-[var(--setly-text-secondary)] py-2 text-sm"
+            className="w-full text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)] py-2 text-sm font-medium transition-colors"
           >
             ← Back
           </button>
