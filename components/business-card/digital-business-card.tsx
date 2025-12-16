@@ -98,7 +98,7 @@ END:VCARD`;
                   transition={{ type: "spring", stiffness: 260, damping: 30, mass: 1 }}
                 >
                   {/* Front Side */}
-                  <button
+                  <div
                     onClick={() => setIsFlipped(true)}
                     className="absolute inset-0 bg-white rounded-3xl shadow-2xl p-8 flex flex-col text-left cursor-pointer hover:shadow-3xl transition-shadow"
                     style={{ backfaceVisibility: "hidden" }}
@@ -149,10 +149,10 @@ END:VCARD`;
                     <div className="text-center py-3 text-sm text-[var(--setly-text-secondary)]/60">
                       Tap to see contact info →
                     </div>
-                  </button>
+                  </div>
 
                   {/* Back Side */}
-                  <button
+                  <div
                     onClick={() => setIsFlipped(false)}
                     className="absolute inset-0 bg-gradient-to-br from-[var(--setly-primary-blue)] to-[#3B6FCC] rounded-3xl shadow-2xl p-8 flex flex-col text-white text-left cursor-pointer hover:shadow-3xl transition-shadow"
                     style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
@@ -222,7 +222,7 @@ END:VCARD`;
                     <div className="text-center py-3 text-sm opacity-60">
                       ← Tap to flip back
                     </div>
-                  </button>
+                  </div>
                 </motion.div>
               </div>
 
