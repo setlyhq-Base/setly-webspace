@@ -232,45 +232,114 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
   };
 
   return (
-    <div className="h-full flex flex-col px-6 py-8 bg-white">
-      <div className="max-w-md w-full mx-auto flex flex-col h-full">
-        {/* Context badge - subtle */}
-        <motion.div
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 26 }}
-          className="mb-6"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 text-[var(--setly-text-secondary)] text-xs font-medium">
-            <span className="text-[var(--setly-primary-blue)]">✓</span>
-            <span>{context.label}</span>
-          </div>
-        </motion.div>
+    <div className="h-full flex flex-col bg-white">
+      {/* Top Navigation Header - Always visible */}
+      <div className="px-6 pt-6 pb-4 border-b border-gray-100">
+        <div className="max-w-md w-full mx-auto flex items-center justify-between">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)] py-2 font-medium transition-colors"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back
+          </button>
+          
+          <button
+            onClick={onNext}
+            className="flex items-center gap-2 bg-[var(--setly-primary-blue)] text-white px-6 py-2 rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98] transition-all"
+          >
+            Continue
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
 
-        {/* Header - clear hierarchy */}
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.1 }}
-          className="mb-8"
-        >
-          <h2 className="text-2xl font-bold text-[var(--setly-ink)] mb-3 leading-tight">
-            {context.headline}
-          </h2>
-        </motion.div>
+      <div className="flex-1 flex flex-col px-6 py-6 overflow-y-auto">
+        <div className="max-w-md w-full mx-auto flex flex-col h-full">
+          {/* Context badge - subtle */}
+          <motion.div
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 26 }}
+            className="mb-4"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 text-[var(--setly-text-secondary)] text-xs font-medium">
+              <span className="text-[var(--setly-primary-blue)]">✓</span>
+              <span>{context.label}</span>
+            </div>
+          </motion.div>
 
-        {/* Feature Card - Calm, focused */}
-        <div className="flex-1 mb-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeFeature}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              onClick={handleCardTap}
-              className="relative h-full rounded-3xl shadow-lg bg-white cursor-pointer overflow-hidden"
-            >
+          {/* Header - clear hierarchy */}
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.1 }}
+            className="mb-6"
+          >
+            <h2 className="text-2xl font-bold text-[var(--setly-ink)] mb-3 leading-tight">
+              {context.headline}
+            </h2>
+          </motion.div>
+
+          {/* Category Navigation - ABOVE the card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.15 }}
+            className="flex items-center justify-center gap-4 mb-6"
+          >
+            {orderedFeatures.map((feature) => {
+              const isActive = activeFeature === feature.id;
+              
+              return (
+                <button
+                  key={feature.id}
+                  onClick={() => setActiveFeature(feature.id)}
+                  className="relative group transition-all"
+                  title={feature.title}
+                >
+                  <div 
+                    className={`
+                      flex items-center justify-center transition-all duration-300
+                      ${isActive 
+                        ? 'w-12 h-12 rounded-xl' 
+                        : 'w-9 h-9 rounded-lg opacity-30 hover:opacity-60'
+                      }
+                    `}
+                    style={{
+                      backgroundColor: isActive ? `${feature.accentColor}10` : 'transparent'
+                    }}
+                  >
+                    <div 
+                      className="transition-all duration-300"
+                      style={{ 
+                        color: isActive ? feature.accentColor : 'var(--setly-text-secondary)'
+                      }}
+                    >
+                      {feature.iconSmall}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </motion.div>
+
+          {/* Feature Card - Calm, focused */}
+          <div className="flex-1 min-h-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeFeature}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                onClick={handleCardTap}
+                className="relative h-full rounded-3xl shadow-lg bg-white cursor-pointer overflow-hidden"
+              >
               <AnimatePresence mode="wait">
                 {!isFlipped ? (
                   /* Front - What it does */
@@ -397,71 +466,8 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
             </motion.div>
           </AnimatePresence>
         </div>
-
-        {/* Minimal Category Navigation - refined icons */}
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.2 }}
-          className="flex items-center justify-center gap-4 mb-8"
-        >
-          {orderedFeatures.map((feature) => {
-            const isActive = activeFeature === feature.id;
-            
-            return (
-              <button
-                key={feature.id}
-                onClick={() => setActiveFeature(feature.id)}
-                className="relative group transition-all"
-                title={feature.title}
-              >
-                <div 
-                  className={`
-                    flex items-center justify-center transition-all duration-300
-                    ${isActive 
-                      ? 'w-12 h-12 rounded-xl' 
-                      : 'w-9 h-9 rounded-lg opacity-30 hover:opacity-60'
-                    }
-                  `}
-                  style={{
-                    backgroundColor: isActive ? `${feature.accentColor}10` : 'transparent'
-                  }}
-                >
-                  <div 
-                    className="transition-all duration-300"
-                    style={{ 
-                      color: isActive ? feature.accentColor : 'var(--setly-text-secondary)'
-                    }}
-                  >
-                    {feature.iconSmall}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </motion.div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.3 }}
-          className="space-y-3"
-        >
-          <button
-            onClick={onNext}
-            className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 active:scale-[0.98] transition-all"
-          >
-            Continue
-          </button>
-          <button
-            onClick={onBack}
-            className="w-full text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)] py-2 text-sm font-medium transition-colors"
-          >
-            ← Back
-          </button>
-        </motion.div>
       </div>
+    </div>
     </div>
   );
 }
