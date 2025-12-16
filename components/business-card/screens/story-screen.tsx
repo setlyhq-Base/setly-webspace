@@ -11,7 +11,7 @@ interface StoryScreenProps {
 export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
   
   const handleAddToHomeScreen = () => {
-    if (navigator.share) {
+    if (typeof navigator !== 'undefined' && 'share' in navigator) {
       alert("Tap the Share button, then 'Add to Home Screen' to save Setly");
     } else {
       alert("To save Setly: Tap Share → Add to Home Screen");
@@ -19,7 +19,7 @@ export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
   };
 
   const handleShare = async () => {
-    if (navigator.share) {
+    if (typeof navigator !== 'undefined' && 'share' in navigator && navigator.share) {
       try {
         await navigator.share({
           title: 'Setly',
@@ -30,8 +30,10 @@ export function StoryScreen({ onNext, onBack, onRestart }: StoryScreenProps) {
         // User cancelled, that's okay
       }
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard");
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard");
+      }
     }
   };
 
