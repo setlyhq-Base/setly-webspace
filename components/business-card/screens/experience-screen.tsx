@@ -233,32 +233,19 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
 
   return (
     <div className="h-full flex flex-col bg-white">
-      {/* Top Navigation Header - Always visible */}
-      <div className="px-6 pt-6 pb-4 border-b border-gray-100">
-        <div className="max-w-md w-full mx-auto flex items-center justify-between">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-[var(--setly-text-secondary)] hover:text-[var(--setly-ink)] py-2 font-medium transition-colors"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-            Back
-          </button>
-          
-          <button
-            onClick={onNext}
-            className="flex items-center gap-2 bg-[var(--setly-primary-blue)] text-white px-6 py-2 rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98] transition-all"
-          >
-            Continue
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </button>
-        </div>
+      {/* Minimal top back - subtle, non-competing */}
+      <div className="absolute top-6 left-6 z-20">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-[var(--setly-text-secondary)]/60 hover:text-[var(--setly-ink)] transition-colors"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
       </div>
 
-      <div className="flex-1 flex flex-col px-6 py-6 overflow-y-auto">
+      <div className="flex-1 flex flex-col px-6 pt-16 pb-6 overflow-y-auto">
         <div className="max-w-md w-full mx-auto flex flex-col h-full">
           {/* Context badge - subtle */}
           <motion.div
@@ -466,6 +453,21 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {/* Bottom Continue - Strong anchor */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 26, delay: 0.3 }}
+          className="mt-6"
+        >
+          <button
+            onClick={onNext}
+            className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 active:scale-[0.98] transition-all"
+          >
+            Continue
+          </button>
+        </motion.div>
       </div>
     </div>
     </div>
