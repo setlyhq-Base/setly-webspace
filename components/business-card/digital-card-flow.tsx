@@ -89,11 +89,6 @@ export function DigitalCardFlow() {
     velocity: 0,
   };
 
-  // Micro blur effect during transitions (barely perceptible forward momentum cue)
-  const getMotionBlur = (isActive: boolean) => {
-    return isActive ? "blur(0px)" : "blur(1.5px)";
-  };
-
   return (
     <div className="fixed inset-0 bg-white overflow-hidden select-none">
       {/* Progress Indicator */}
@@ -148,8 +143,7 @@ export function DigitalCardFlow() {
           initial={false}
           animate={{ 
             x: currentScreen === "identity" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(0),
-            opacity: currentScreen === "identity" ? 1 : 0,
-            filter: getMotionBlur(currentScreen === "identity"),
+            opacity: currentScreen === "identity" ? 1 : currentScreen === "waitlist" ? 0 : 0.3,
             pointerEvents: currentScreen === "identity" ? "auto" : "none"
           }}
           transition={screenTransition}
@@ -163,8 +157,7 @@ export function DigitalCardFlow() {
           initial={false}
           animate={{ 
             x: currentScreen === "moment" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(1),
-            opacity: currentScreen === "moment" ? 1 : 0,
-            filter: getMotionBlur(currentScreen === "moment"),
+            opacity: currentScreen === "moment" ? 1 : currentScreen === "waitlist" ? 0 : 0.3,
             pointerEvents: currentScreen === "moment" ? "auto" : "none"
           }}
           transition={screenTransition}
@@ -182,8 +175,7 @@ export function DigitalCardFlow() {
           initial={false}
           animate={{ 
             x: currentScreen === "experience" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(2),
-            opacity: currentScreen === "experience" ? 1 : 0,
-            filter: getMotionBlur(currentScreen === "experience"),
+            opacity: currentScreen === "experience" ? 1 : currentScreen === "waitlist" ? 0 : 0.3,
             pointerEvents: currentScreen === "experience" ? "auto" : "none"
           }}
           transition={screenTransition}
@@ -201,8 +193,7 @@ export function DigitalCardFlow() {
           initial={false}
           animate={{ 
             x: currentScreen === "founder" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(3),
-            opacity: currentScreen === "founder" ? 1 : 0,
-            filter: getMotionBlur(currentScreen === "founder"),
+            opacity: currentScreen === "founder" ? 1 : currentScreen === "waitlist" ? 0 : 0.3,
             pointerEvents: currentScreen === "founder" ? "auto" : "none"
           }}
           transition={screenTransition}
@@ -216,23 +207,7 @@ export function DigitalCardFlow() {
           initial={false}
           animate={{ 
             x: currentScreen === "story" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(4),
-            opacity: currentScreen === "story" ? 1 : 0,
-            filter: getMotionBlur(currentScreen === "story"),
-            pointerEvents: currentScreen === "founder" ? "auto" : "none"
-          }}
-          transition={screenTransition}
-        >
-          <FounderScreen onNext={nextScreen} onBack={prevScreen} />
-        </motion.div>
-
-        {/* Story Screen */}
-        <motion.div
-          className="absolute inset-0"
-          initial={false}
-          animate={{ 
-            x: currentScreen === "story" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(4),
-            opacity: currentScreen === "story" ? 1 : 0,
-            filter: getMotionBlur(currentScreen === "story"),
+            opacity: currentScreen === "story" ? 1 : currentScreen === "waitlist" ? 0 : 0.3,
             pointerEvents: currentScreen === "story" ? "auto" : "none"
           }}
           transition={screenTransition}

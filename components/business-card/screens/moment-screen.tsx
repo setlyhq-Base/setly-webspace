@@ -16,7 +16,7 @@ const moments = [
     subtitle: "Everything feels new",
     gradient: "from-slate-50 to-blue-50/30",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-7 h-7">
         <path d="M12 3L3 9L12 15L21 9L12 3Z" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M3 15L12 21L21 15" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M12 15V21" strokeLinecap="round" strokeLinejoin="round"/>
@@ -29,7 +29,7 @@ const moments = [
     subtitle: "Need a place to call home",
     gradient: "from-slate-50 to-violet-50/30",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-7 h-7">
         <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M9 22V12H15V22" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
@@ -41,7 +41,7 @@ const moments = [
     subtitle: "Getting around is a puzzle",
     gradient: "from-slate-50 to-emerald-50/30",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-7 h-7">
         <path d="M5 17H4C3.46957 17 2.96086 16.7893 2.58579 16.4142C2.21071 16.0391 2 15.5304 2 15V11L4.45 5.9C4.61696 5.55849 4.87808 5.27118 5.20269 5.07434C5.5273 4.87749 5.9 4.77907 6.28 4.79H17.72C18.1 4.77907 18.4727 4.87749 18.7973 5.07434C19.1219 5.27118 19.383 5.55849 19.55 5.9L22 11V15C22 15.5304 21.7893 16.0391 21.4142 16.4142C21.0391 16.7893 20.5304 17 20 17H19" strokeLinecap="round" strokeLinejoin="round"/>
         <circle cx="7" cy="17" r="2" strokeLinecap="round" strokeLinejoin="round"/>
         <circle cx="17" cy="17" r="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -54,7 +54,7 @@ const moments = [
     subtitle: "Looking for connection",
     gradient: "from-slate-50 to-amber-50/30",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-7 h-7">
         <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" strokeLinecap="round" strokeLinejoin="round"/>
         <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" strokeLinecap="round" strokeLinejoin="round"/>

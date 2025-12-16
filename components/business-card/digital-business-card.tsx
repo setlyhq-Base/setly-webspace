@@ -98,14 +98,18 @@ END:VCARD`;
                   transition={{ type: "spring", stiffness: 260, damping: 30, mass: 1 }}
                 >
                   {/* Front Side */}
-                  <div
-                    className="absolute inset-0 bg-white rounded-3xl shadow-2xl p-8 flex flex-col"
+                  <button
+                    onClick={() => setIsFlipped(true)}
+                    className="absolute inset-0 bg-white rounded-3xl shadow-2xl p-8 flex flex-col text-left cursor-pointer hover:shadow-3xl transition-shadow"
                     style={{ backfaceVisibility: "hidden" }}
                   >
                     {/* Close button */}
                     <button
-                      onClick={onClose}
-                      className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onClose();
+                      }}
+                      className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors z-10"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-600">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -142,23 +146,24 @@ END:VCARD`;
                     </div>
 
                     {/* Flip hint */}
-                    <button
-                      onClick={() => setIsFlipped(true)}
-                      className="text-center py-3 text-sm text-[var(--setly-text-secondary)]/60 hover:text-[var(--setly-text-secondary)] transition-colors"
-                    >
+                    <div className="text-center py-3 text-sm text-[var(--setly-text-secondary)]/60">
                       Tap to see contact info →
-                    </button>
-                  </div>
+                    </div>
+                  </button>
 
                   {/* Back Side */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-br from-[var(--setly-primary-blue)] to-[#3B6FCC] rounded-3xl shadow-2xl p-8 flex flex-col text-white"
+                  <button
+                    onClick={() => setIsFlipped(false)}
+                    className="absolute inset-0 bg-gradient-to-br from-[var(--setly-primary-blue)] to-[#3B6FCC] rounded-3xl shadow-2xl p-8 flex flex-col text-white text-left cursor-pointer hover:shadow-3xl transition-shadow"
                     style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                   >
                     {/* Close button */}
                     <button
-                      onClick={onClose}
-                      className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onClose();
+                      }}
+                      className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors z-10"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-white">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -208,19 +213,16 @@ END:VCARD`;
                           Start. Evolve. Thrive. Live your way.
                         </p>
                         <p className="text-xs opacity-70 mt-3">
-                          Built from lived experience. Not a corporate product.
+                          Built from lived experience. Designed for real life transitions.
                         </p>
                       </div>
                     </div>
 
                     {/* Flip back hint */}
-                    <button
-                      onClick={() => setIsFlipped(false)}
-                      className="text-center py-3 text-sm opacity-60 hover:opacity-100 transition-opacity"
-                    >
+                    <div className="text-center py-3 text-sm opacity-60">
                       ← Tap to flip back
-                    </button>
-                  </div>
+                    </div>
+                  </button>
                 </motion.div>
               </div>
 
@@ -233,13 +235,13 @@ END:VCARD`;
               >
                 <button
                   onClick={handleSaveToPhone}
-                  className="flex-1 bg-white text-[var(--setly-ink)] rounded-2xl px-6 py-4 text-base font-semibold shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
+                  className="flex-1 bg-white/95 backdrop-blur-sm text-[var(--setly-ink)] rounded-2xl px-6 py-3.5 text-sm font-medium border border-gray-200/50 hover:border-gray-300/60 hover:bg-white active:scale-[0.98] transition-all"
                 >
                   Save to Phone
                 </button>
                 <button
                   onClick={handleShare}
-                  className="flex-1 bg-white/90 text-[var(--setly-ink)] rounded-2xl px-6 py-4 text-base font-semibold shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
+                  className="flex-1 bg-white/95 backdrop-blur-sm text-[var(--setly-ink)] rounded-2xl px-6 py-3.5 text-sm font-medium border border-gray-200/50 hover:border-gray-300/60 hover:bg-white active:scale-[0.98] transition-all"
                 >
                   Share
                 </button>

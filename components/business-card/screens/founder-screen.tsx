@@ -50,13 +50,11 @@ export function FounderScreen({ onNext, onBack }: FounderScreenProps) {
                 {/* Emotional content */}
                 <div className="space-y-6 text-center">
                   <h2 className="text-2xl text-[var(--setly-ink)] leading-relaxed font-semibold px-2">
-                    I've been exactly where you are.
+                    I moved to the U.S. for grad school.
                   </h2>
 
                   <p className="text-base text-[var(--setly-text-secondary)] leading-relaxed px-2">
-                    I moved to the U.S. and felt the chaos firsthand —
-                    finding housing, getting rides, buying essentials,
-                    and feeling completely lost in a new place.
+                    I remember the chaos — finding housing, getting rides, buying essentials, feeling completely lost in a new place.
                   </p>
 
                   <p className="text-base text-[var(--setly-ink)] leading-relaxed px-2 font-medium pt-2">
@@ -90,23 +88,20 @@ export function FounderScreen({ onNext, onBack }: FounderScreenProps) {
                     What is Setly?
                   </h2>
 
-                  <p className="text-base text-[var(--setly-text-secondary)] font-medium">
-                    Setly = Settle + Easily
-                  </p>
-
-                  <p className="text-base text-[var(--setly-ink)] leading-relaxed">
-                    Setly helps students and expats settle into a new place —
-                    faster, calmer, together.
+                  <p className="text-base text-[var(--setly-ink)] leading-relaxed font-medium">
+                    Setly helps students and expats settle into a new place — faster, calmer, together.
                   </p>
 
                   <p className="text-base text-[var(--setly-text-secondary)] leading-relaxed">
-                    It brings housing, rides, essentials, and community
-                    into one trusted place, built from lived experience —
-                    not corporate assumptions.
+                    Housing, rides, essentials, and community — brought into one trusted experience.
                   </p>
 
-                  <p className="text-sm text-[var(--setly-ink)] leading-relaxed pt-4 font-medium italic">
-                    You're not alone. You'll figure this out.
+                  <p className="text-base text-[var(--setly-text-secondary)] leading-relaxed">
+                    Built from lived experience, designed for people navigating real transitions.
+                  </p>
+
+                  <p className="text-base text-[var(--setly-ink)] leading-relaxed pt-4 font-semibold">
+                    Start. Evolve. Thrive. Live your way.
                   </p>
 
                   {/* Flip hint */}
