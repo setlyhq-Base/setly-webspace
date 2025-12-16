@@ -341,7 +341,7 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
             <div
               className="absolute inset-0 rounded-3xl shadow-xl backface-hidden"
               style={{ 
-                backgroundColor: currentFeature.bgColor,
+                backgroundColor: currentFeature.lightAccent,
                 backfaceVisibility: "hidden",
                 transform: "rotateY(180deg)",
               }}
@@ -373,7 +373,7 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-xl">✓</span>
                     <h4 className="text-sm font-bold uppercase tracking-wide"
-                      style={{ color: currentFeature.color }}
+                      style={{ color: currentFeature.accentColor }}
                     >
                       How Setly fixes this
                     </h4>
@@ -384,7 +384,7 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
                         key={idx}
                         className="flex items-start gap-2 text-sm text-[var(--setly-ink)]"
                       >
-                        <span style={{ color: currentFeature.color }} className="mt-0.5">✓</span>
+                        <span style={{ color: currentFeature.accentColor }} className="mt-0.5">✓</span>
                         <span>{solution}</span>
                       </div>
                     ))}
