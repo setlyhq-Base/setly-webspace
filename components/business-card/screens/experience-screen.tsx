@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import { useState } from "react";
 
 interface ExperienceScreenProps {
   onNext: () => void;
@@ -9,492 +9,212 @@ interface ExperienceScreenProps {
   selectedMoment: string | null;
 }
 
-const features = [
+// Core problems and solutions - simplified, human
+const solutions = [
   {
     id: "housing",
-    title: "Housing",
-    description: "Find trusted rooms & rentals",
-    preview: "Verified listings • Local matching • No scams",
-    stats: [
-      { label: "Verified", value: "100%" },
-      { label: "Response", value: "< 2hrs" },
-      { label: "Trust", value: "4.8★" }
-    ],
-    features: ["Verified only", "Real people", "Safe payments"],
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-11 h-11">
-        <path d="M3 10L12 3L21 10V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V10Z"/>
-        <path d="M9 21V13H15V21"/>
-      </svg>
-    ),
-    iconSmall: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-        <path d="M3 10L12 3L21 10V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V10Z"/>
-      </svg>
-    ),
-    accentColor: "#7C3AED",
-    lightAccent: "#F5F3FF",
-    problems: [
-      "Facebook groups",
-      "Scams and fake listings",
-      "No verification",
-      "Too many messages",
-    ],
-    solutions: [
-      "Verified listings only",
-      "Real people, real places",
-      "Location-based matching",
-      "Community trust built-in",
-    ],
-    whyItWorks: "Trust matters when you're new. Random groups and strangers fail because there's no verification. Setly verifies everyone, so you settle with people you can actually trust.",
+    problem: "Finding housing",
+    painPoint: "Random Facebook groups. Scams everywhere. No way to tell who's real.",
+    solution: "Verified students only. Real listings. Safe payments. Your community helps you settle.",
+    color: "#7C3AED",
+    lightBg: "#FAFAFE",
   },
   {
     id: "rides",
-    title: "Rides",
-    description: "Share rides, save money",
-    preview: "Split costs • Verified riders • Safe & social",
-    stats: [
-      { label: "Savings", value: "60%" },
-      { label: "Verified", value: "100%" },
-      { label: "Rating", value: "4.9★" }
-    ],
-    features: ["Split costs", "Route match", "In-app chat"],
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-11 h-11">
-        <circle cx="7" cy="17" r="2"/>
-        <circle cx="17" cy="17" r="2"/>
-        <path d="M5 17H4C3.46957 17 2.96086 16.7893 2.58579 16.4142C2.21071 16.0391 2 15.5304 2 15V11.5L4.5 6C4.65 5.65 4.9 5.35 5.2 5.15C5.5 4.95 5.85 4.85 6.2 4.85H17.8C18.15 4.85 18.5 4.95 18.8 5.15C19.1 5.35 19.35 5.65 19.5 6L22 11.5V15C22 15.5304 21.7893 16.0391 21.4142 16.4142C21.0391 16.7893 20.5304 17 20 17H19"/>
-      </svg>
-    ),
-    iconSmall: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-        <circle cx="7" cy="17" r="2"/>
-        <circle cx="17" cy="17" r="2"/>
-        <path d="M5 17H4C3.46957 17 2.96086 16.7893 2.58579 16.4142C2.21071 16.0391 2 15.5304 2 15V11.5"/>
-      </svg>
-    ),
-    accentColor: "#10B981",
-    lightAccent: "#F0FDF4",
-    problems: [
-      "Uber is expensive",
-      "Can't find ride buddies",
-      "Unsafe random drivers",
-      "No coordination tools",
-    ],
-    solutions: [
-      "Split costs with verified students",
-      "Matched by route & timing",
-      "Community-based trust",
-      "Built-in messaging",
-    ],
-    whyItWorks: "Getting around shouldn't drain your budget or feel unsafe. Setly matches you with verified students going the same way, so you split costs and build connections — not just take rides.",
+    problem: "Getting around",
+    painPoint: "Uber drains your budget. Can't find people going the same way. No coordination.",
+    solution: "Split rides with verified students. Same route, same timing. Save money, make friends.",
+    color: "#10B981",
+    lightBg: "#F7FEF9",
   },
   {
-    id: "marketplace",
-    title: "Essentials",
-    description: "Buy & sell what you need",
-    preview: "Student-to-student • Local pickup • Trusted",
-    stats: [
-      { label: "Local", value: "100%" },
-      { label: "Savings", value: "40%" },
-      { label: "Sold in", value: "< 3d" }
-    ],
-    features: ["Local pickup", "Verified sellers", "Fair pricing"],
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-11 h-11">
-        <path d="M2 2H4.5L7 14.5C7.1 15 7.35 15.4 7.7 15.7C8.05 16 8.5 16.15 8.95 16.15H18.5C18.95 16.15 19.4 16 19.75 15.7C20.1 15.4 20.35 15 20.45 14.5L22.5 6.5H6"/>
-        <circle cx="9" cy="20.5" r="1.5"/>
-        <circle cx="18" cy="20.5" r="1.5"/>
-      </svg>
-    ),
-    iconSmall: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-        <path d="M2 2H4.5L7 14.5"/>
-        <circle cx="9" cy="20.5" r="1.5"/>
-        <circle cx="18" cy="20.5" r="1.5"/>
-      </svg>
-    ),
-    accentColor: "#F59E0B",
-    lightAccent: "#FFFBEB",
-    problems: [
-      "Need to buy everything new",
-      "Don't know where to shop",
-      "Craigslist feels sketchy",
-      "No local recommendations",
-    ],
-    solutions: [
-      "Buy/sell within your community",
-      "Local pickup only",
-      "Verified buyers & sellers",
-      "Student-to-student exchange",
-    ],
-    whyItWorks: "You don't need brand new everything, and Craigslist feels sketchy. Setly keeps it local and student-to-student — verified people from your community, not random strangers.",
+    id: "essentials",
+    problem: "Buying essentials",
+    painPoint: "Everything's expensive when new. Craigslist feels sketchy. Don't know where to shop.",
+    solution: "Buy and sell within your student community. Local pickup. Fair prices. Real people.",
+    color: "#F59E0B",
+    lightBg: "#FFFEF7",
   },
   {
     id: "community",
-    title: "Community",
-    description: "Connect with people like you",
-    preview: "Fellow Setlies • Shared experiences • Real connections",
-    stats: [
-      { label: "Users", value: "2.5k+" },
-      { label: "Response", value: "95%" },
-      { label: "Rating", value: "4.9★" }
-    ],
-    features: ["Find Setlies", "Local groups", "Real bonds"],
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-11 h-11">
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M2 21V19C2 17.9391 2.42143 16.9217 3.17157 16.1716C3.92172 15.4214 4.93913 15 6 15H12C13.0609 15 14.0783 15.4214 14.8284 16.1716C15.5786 16.9217 16 17.9391 16 19V21"/>
-        <path d="M16 4C16.8604 4.22031 17.623 4.72071 18.1676 5.42232C18.7122 6.12392 19.0078 6.98683 19.0078 7.875C19.0078 8.76318 18.7122 9.62608 18.1676 10.3277C17.623 11.0293 16.8604 11.5297 16 11.75"/>
-        <path d="M22 21V19C21.9993 18.1137 21.7044 17.2528 21.1614 16.5523C20.6184 15.8519 19.8581 15.3516 19 15.13"/>
-      </svg>
-    ),
-    iconSmall: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M2 21V19C2 17.9391 2.42143 16.9217 3.17157 16.1716C3.92172 15.4214 4.93913 15 6 15H12"/>
-      </svg>
-    ),
-    accentColor: "#4F8DFF",
-    lightAccent: "#EFF6FF",
-    problems: [
-      "Feeling isolated",
-      "Don't know anyone yet",
-      "Hard to meet locals",
-      "Generic social apps",
-    ],
-    solutions: [
-      "Connect with fellow Setlies",
-      "Shared experience groups",
-      "Location-based communities",
-      "Real relationships, not networking",
-    ],
-    whyItWorks: "Loneliness is real when you're in a new place. Generic social apps feel forced. Setly connects you with people who share your interests and are actually nearby — verified students, not profiles.",
+    problem: "Feeling alone",
+    painPoint: "Don't know anyone. Generic apps feel forced. Hard to find people who get it.",
+    solution: "Connect with students who share your experience. Real bonds, not networking.",
+    color: "#4F8DFF",
+    lightBg: "#F7FBFF",
   },
 ];
 
-// Context mapping: what matters first based on their situation
-const momentContext = {
-  landed: {
-    label: "Just landed in the U.S.",
-    headline: "Just landed? Here's what usually matters first",
-    primaryFeature: "housing",
-    order: ["housing", "rides", "marketplace", "community"],
-  },
-  housing: {
-    label: "Looking for housing",
-    headline: "Looking for housing? Here's how Setly helps",
-    primaryFeature: "housing",
-    order: ["housing", "community", "marketplace", "rides"],
-  },
-  essentials: {
-    label: "Need rides / essentials",
-    headline: "Getting settled? Here's what you need",
-    primaryFeature: "marketplace",
-    order: ["marketplace", "rides", "housing", "community"],
-  },
-  community: {
-    label: "Don't want to feel alone",
-    headline: "Building connections? Here's how we help",
-    primaryFeature: "community",
-    order: ["community", "housing", "rides", "marketplace"],
-  },
-};
+export function ExperienceScreen({ onNext, onBack }: ExperienceScreenProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
 
-export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceScreenProps) {
-  // Get context based on their selection
-  const context = momentContext[selectedMoment as keyof typeof momentContext] || momentContext.landed;
-  
-  // Start with the most relevant feature for their situation
-  const [activeFeature, setActiveFeature] = useState(context.primaryFeature);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const current = solutions[activeIndex];
 
-  // Update active feature when selectedMoment changes
-  useEffect(() => {
-    setActiveFeature(context.primaryFeature);
-    setIsFlipped(false);
-  }, [selectedMoment, context.primaryFeature]);
+  // Swipe navigation
+  const handleDragEnd = (_: any, info: PanInfo) => {
+    const threshold = 60;
+    const velocity = 400;
 
-  // Reset flip when changing features
-  useEffect(() => {
-    setIsFlipped(false);
-  }, [activeFeature]);
+    if (Math.abs(info.offset.x) > threshold || Math.abs(info.velocity.x) > velocity) {
+      if (info.offset.x > 0 && activeIndex > 0) {
+        setDirection(-1);
+        setActiveIndex(activeIndex - 1);
+      } else if (info.offset.x < 0 && activeIndex < solutions.length - 1) {
+        setDirection(1);
+        setActiveIndex(activeIndex + 1);
+      }
+    }
+  };
 
-  const currentFeature = features.find((f) => f.id === activeFeature) || features[0];
-
-  // Reorder features based on their situation
-  const orderedFeatures = context.order
-    .map((id) => features.find((f) => f.id === id))
-    .filter(Boolean) as typeof features;
-
-  const handleCardTap = () => {
-    setIsFlipped(!isFlipped);
+  const navigateTo = (index: number) => {
+    if (index !== activeIndex) {
+      setDirection(index > activeIndex ? 1 : -1);
+      setActiveIndex(index);
+    }
   };
 
   return (
     <div className="h-full flex flex-col bg-white">
-      {/* Minimal top back - subtle, non-competing */}
-      <div className="absolute top-6 left-6 z-20">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1 text-[var(--setly-text-secondary)]/60 hover:text-[var(--setly-ink)] transition-colors"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-          </svg>
-        </button>
-      </div>
+      {/* Minimal back */}
+      <button
+        onClick={onBack}
+        className="absolute top-6 left-6 z-20 flex items-center gap-1.5 text-gray-400 hover:text-gray-900 transition-colors text-sm"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Back</span>
+      </button>
 
-      <div className="flex-1 flex flex-col px-6 pt-16 pb-6 overflow-y-auto">
-        <div className="max-w-md w-full mx-auto flex flex-col h-full">
-          {/* Context badge - subtle */}
-          <motion.div
+      <div className="flex-1 flex flex-col px-6 pt-20 pb-6">
+        <div className="max-w-lg w-full mx-auto flex flex-col h-full">
+          
+          {/* Simple headline */}
+          <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="mb-4"
+            transition={{ duration: 0.5 }}
+            className="text-[28px] font-semibold text-gray-900 mb-2 leading-tight"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 text-[var(--setly-text-secondary)] text-xs font-medium">
-              <span className="text-[var(--setly-primary-blue)]">✓</span>
-              <span>{context.label}</span>
-            </div>
-          </motion.div>
+            Here's what you'll need
+          </motion.h2>
 
-          {/* Header - clear hierarchy */}
-          <motion.div
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="mb-6"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-gray-500 mb-8 text-[15px]"
           >
-            <h2 className="text-2xl font-bold text-[var(--setly-ink)] mb-3 leading-tight">
-              {context.headline}
-            </h2>
-          </motion.div>
+            And how Setly makes each one easier
+          </motion.p>
 
-          {/* Category Navigation - Calm, minimal */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-            className="flex items-center justify-center gap-2 mb-6"
-          >
-            {orderedFeatures.map((feature) => {
-              const isActive = activeFeature === feature.id;
-              
-              return (
-                <button
-                  key={feature.id}
-                  onClick={() => setActiveFeature(feature.id)}
-                  className="relative transition-all duration-300"
-                  title={feature.title}
-                >
-                  {/* Simple dot indicator */}
-                  <div 
-                    className={`
-                      rounded-full transition-all duration-300
-                      ${isActive 
-                        ? 'w-2 h-2' 
-                        : 'w-1.5 h-1.5 opacity-25 hover:opacity-40'
-                      }
-                    `}
-                    style={{
-                      backgroundColor: isActive ? feature.accentColor : '#94a3b8'
-                    }}
-                  />
-                </button>
-              );
-            })}
-          </motion.div>
-
-          {/* Feature Card - Premium physical object */}
-          <div className="flex-1 min-h-0">
-            {/* Card shell - dimensional, refined */}
-            <div 
-              onClick={handleCardTap}
-              className="relative h-full rounded-[28px] cursor-pointer overflow-hidden"
-              style={{
-                boxShadow: '0 2px 12px rgba(0,0,0,0.04), 0 12px 48px rgba(0,0,0,0.06)',
-              }}
-            >
-              {/* Flip container - single physical card */}
-              <motion.div
-                animate={{
-                  rotateY: isFlipped ? 180 : 0,
-                }}
-                transition={{
-                  duration: 0.6,
-                  ease: [0.23, 1, 0.32, 1], // Calm easeOutQuint
-                }}
-                style={{
-                  transformStyle: "preserve-3d",
-                }}
-                className="relative h-full"
+          {/* Pagination dots - simple, calm */}
+          <div className="flex items-center justify-center gap-2 mb-8">
+            {solutions.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => navigateTo(index)}
+                className="transition-all duration-300"
               >
-                {/* Front - What usually goes wrong */}
                 <div
+                  className={`rounded-full transition-all duration-300 ${
+                    index === activeIndex
+                      ? 'w-8 h-1.5'
+                      : 'w-1.5 h-1.5 opacity-20 hover:opacity-40'
+                  }`}
                   style={{
-                    backfaceVisibility: "hidden",
-                    WebkitBackfaceVisibility: "hidden",
+                    backgroundColor: index === activeIndex ? current.color : '#94a3b8'
                   }}
-                  className="absolute inset-0"
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeFeature}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ 
-                        duration: 0.3,
-                        ease: [0.23, 1, 0.32, 1]
-                      }}
-                      className="h-full flex flex-col p-8"
-                      style={{
-                        background: `linear-gradient(135deg, ${currentFeature.lightAccent} 0%, #ffffff 100%)`,
-                      }}
-                    >
-                      {/* Header - locked structure */}
-                      <div className="mb-10">
-                        <h3 className="text-[22px] font-semibold text-[var(--setly-ink)] mb-1">
-                          {currentFeature.title}
-                        </h3>
-                        <p className="text-sm text-[var(--setly-text-secondary)]/70">
-                          {currentFeature.description}
-                        </p>
-                      </div>
-
-                      {/* Problem section */}
-                      <div className="flex-1">
-                        <h4 className="text-[11px] uppercase tracking-wider text-[var(--setly-text-secondary)]/50 font-medium mb-5">
-                          What usually goes wrong
-                        </h4>
-                        <div className="space-y-3">
-                          {currentFeature.problems.slice(0, 4).map((problem, idx) => (
-                            <div
-                              key={idx}
-                              className="flex items-start gap-3"
-                            >
-                              <div 
-                                className="w-1 h-1 rounded-full mt-[7px] flex-shrink-0 opacity-40"
-                                style={{ backgroundColor: currentFeature.accentColor }}
-                              />
-                              <p className="text-[15px] text-[var(--setly-text-secondary)] leading-[1.5]">
-                                {problem}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Tap hint - subtle */}
-                      <div className="mt-8 pt-5 border-t border-black/5">
-                        <p className="text-[11px] text-center text-[var(--setly-text-secondary)]/40 tracking-wide">
-                          TAP TO SEE HOW SETLY HELPS
-                        </p>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-
-                {/* Back - How Setly helps */}
-                <div
-                  style={{
-                    backfaceVisibility: "hidden",
-                    WebkitBackfaceVisibility: "hidden",
-                    transform: "rotateY(180deg)",
-                  }}
-                  className="absolute inset-0"
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeFeature}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ 
-                        duration: 0.3,
-                        ease: [0.23, 1, 0.32, 1]
-                      }}
-                      className="h-full flex flex-col p-8"
-                      style={{
-                        background: `linear-gradient(135deg, ${currentFeature.accentColor}08 0%, ${currentFeature.accentColor}04 100%)`,
-                      }}
-                    >
-                      {/* Header - same structure as front */}
-                      <div className="mb-10">
-                        <h3 className="text-[22px] font-semibold text-[var(--setly-ink)] mb-1">
-                          {currentFeature.title}
-                        </h3>
-                        <p className="text-sm text-[var(--setly-text-secondary)]/70">
-                          {currentFeature.description}
-                        </p>
-                      </div>
-
-                      {/* Solution section */}
-                      <div className="flex-1">
-                        <h4 
-                          className="text-[11px] uppercase tracking-wider font-medium mb-5"
-                          style={{ color: currentFeature.accentColor, opacity: 0.7 }}
-                        >
-                          How Setly helps
-                        </h4>
-                        <div className="space-y-3">
-                          {currentFeature.solutions.slice(0, 4).map((solution, idx) => (
-                            <div
-                              key={idx}
-                              className="flex items-start gap-3"
-                            >
-                              <div 
-                                className="w-1 h-1 rounded-full mt-[7px] flex-shrink-0"
-                                style={{ backgroundColor: currentFeature.accentColor }}
-                              />
-                              <p className="text-[15px] text-[var(--setly-ink)] leading-[1.5] font-medium">
-                                {solution}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Why it works - subtle credibility */}
-                        {currentFeature.whyItWorks && (
-                          <div className="mt-8 pt-6 border-t border-black/5">
-                            <p className="text-[13px] text-[var(--setly-text-secondary)]/80 leading-[1.6]">
-                              {currentFeature.whyItWorks}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Tap hint - subtle */}
-                      <div className="mt-8 pt-5 border-t border-black/5">
-                        <p className="text-[11px] text-center text-[var(--setly-text-secondary)]/40 tracking-wide">
-                          TAP TO FLIP BACK
-                        </p>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            </div>
+                />
+              </button>
+            ))}
           </div>
 
-        {/* Bottom Continue - Strong anchor */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          className="mt-6"
-        >
-          <button
+          {/* Main content - horizontal carousel */}
+          <div className="flex-1 relative mb-8">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={activeIndex}
+                custom={direction}
+                initial={{ x: direction > 0 ? 400 : -400, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: direction > 0 ? -400 : 400, opacity: 0 }}
+                transition={{
+                  x: { type: "spring", stiffness: 280, damping: 32, mass: 0.8 },
+                  opacity: { duration: 0.2 }
+                }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.3}
+                onDragEnd={handleDragEnd}
+                className="absolute inset-0 flex flex-col"
+              >
+                {/* Problem section */}
+                <div className="mb-12">
+                  <div className="flex items-baseline gap-3 mb-4">
+                    <div 
+                      className="w-1 h-1 rounded-full mt-2.5 flex-shrink-0"
+                      style={{ backgroundColor: current.color }}
+                    />
+                    <h3 className="text-[22px] font-semibold text-gray-900">
+                      {current.problem}
+                    </h3>
+                  </div>
+                  <p className="text-gray-500 text-[16px] leading-relaxed pl-6">
+                    {current.painPoint}
+                  </p>
+                </div>
+
+                {/* Divider */}
+                <div className="w-12 h-px bg-gradient-to-r from-gray-200 to-transparent mb-12 ml-6" />
+
+                {/* Solution section */}
+                <div>
+                  <div className="flex items-baseline gap-3 mb-4">
+                    <div 
+                      className="w-1.5 h-1.5 rounded-full mt-2.5 flex-shrink-0"
+                      style={{ backgroundColor: current.color }}
+                    />
+                    <h4 
+                      className="text-xs uppercase tracking-wider font-semibold"
+                      style={{ color: current.color }}
+                    >
+                      How Setly helps
+                    </h4>
+                  </div>
+                  <p className="text-gray-900 text-[16px] leading-relaxed font-medium pl-6">
+                    {current.solution}
+                  </p>
+                </div>
+
+                {/* Swipe hint - very subtle */}
+                <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-2 text-gray-300 text-xs">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                    <path d="M15 18l-6-6 6-6"/>
+                  </svg>
+                  <span>Swipe</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Continue button */}
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             onClick={onNext}
-            className="w-full bg-[var(--setly-primary-blue)] text-white rounded-2xl px-8 py-4 text-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 active:scale-[0.98] transition-all"
+            className="w-full bg-gray-900 text-white rounded-2xl px-8 py-4 text-[17px] font-semibold shadow-lg shadow-gray-900/10 hover:shadow-xl hover:shadow-gray-900/20 active:scale-[0.98] transition-all"
           >
             Continue
-          </button>
-        </motion.div>
+          </motion.button>
+
+        </div>
       </div>
-    </div>
     </div>
   );
 }
