@@ -5,14 +5,13 @@ import { motion, PanInfo, useMotionValue } from "framer-motion";
 import { IdentityScreen } from "./screens/identity-screen";
 import { MomentScreen } from "./screens/moment-screen";
 import { ExperienceScreen } from "./screens/experience-screen";
-import { DifferenceScreen } from "./screens/difference-screen";
 import { FounderScreen } from "./screens/founder-screen";
 import { StoryScreen } from "./screens/story-screen";
 import { WaitlistScreen } from "./screens/waitlist-screen";
 
-type Screen = "identity" | "moment" | "experience" | "difference" | "founder" | "story" | "waitlist";
+type Screen = "identity" | "moment" | "experience" | "founder" | "story" | "waitlist";
 
-const mainScreens: Screen[] = ["identity", "moment", "experience", "difference", "founder", "story"];
+const mainScreens: Screen[] = ["identity", "moment", "experience", "founder", "story"];
 
 export function DigitalCardFlow() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("identity");
@@ -53,8 +52,8 @@ export function DigitalCardFlow() {
 
   // Handle swipe with instant response - Apple-calibrated thresholds
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const swipeThreshold = 50;
-    const velocityThreshold = 500;
+    const swipeThreshold = 40;
+    const velocityThreshold = 400;
 
     const offset = info.offset.x;
     const velocity = info.velocity.x;
@@ -196,27 +195,12 @@ export function DigitalCardFlow() {
           />
         </motion.div>
 
-        {/* Difference Screen */}
-        <motion.div
-          className="absolute inset-0"
-          initial={false}
-          animate={{ 
-            x: currentScreen === "difference" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(3),
-            opacity: currentScreen === "difference" ? 1 : 0,
-            filter: getMotionBlur(currentScreen === "difference"),
-            pointerEvents: currentScreen === "difference" ? "auto" : "none"
-          }}
-          transition={screenTransition}
-        >
-          <DifferenceScreen onNext={nextScreen} onBack={prevScreen} />
-        </motion.div>
-
         {/* Founder Screen */}
         <motion.div
           className="absolute inset-0"
           initial={false}
           animate={{ 
-            x: currentScreen === "founder" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(4),
+            x: currentScreen === "founder" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(3),
             opacity: currentScreen === "founder" ? 1 : 0,
             filter: getMotionBlur(currentScreen === "founder"),
             pointerEvents: currentScreen === "founder" ? "auto" : "none"
@@ -231,7 +215,22 @@ export function DigitalCardFlow() {
           className="absolute inset-0"
           initial={false}
           animate={{ 
-            x: currentScreen === "story" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(5),
+            x: currentScreen === "story" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(4),
+            opacity: currentScreen === "story" ? 1 : 0,
+            filter: getMotionBlur(currentScreen === "story"),
+            pointerEvents: currentScreen === "founder" ? "auto" : "none"
+          }}
+          transition={screenTransition}
+        >
+          <FounderScreen onNext={nextScreen} onBack={prevScreen} />
+        </motion.div>
+
+        {/* Story Screen */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ 
+            x: currentScreen === "story" ? 0 : currentScreen === "waitlist" ? "-100%" : getScreenOffset(4),
             opacity: currentScreen === "story" ? 1 : 0,
             filter: getMotionBlur(currentScreen === "story"),
             pointerEvents: currentScreen === "story" ? "auto" : "none"

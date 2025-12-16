@@ -46,6 +46,7 @@ const features = [
       "Location-based matching",
       "Community trust built-in",
     ],
+    whyItWorks: "Trust matters when you're new. Random groups and strangers fail because there's no verification. Setly verifies everyone, so you settle with people you can actually trust.",
   },
   {
     id: "rides",
@@ -86,6 +87,7 @@ const features = [
       "Community-based trust",
       "Built-in messaging",
     ],
+    whyItWorks: "Getting around shouldn't drain your budget or feel unsafe. Setly matches you with verified students going the same way, so you split costs and build connections — not just take rides.",
   },
   {
     id: "marketplace",
@@ -126,6 +128,7 @@ const features = [
       "Verified buyers & sellers",
       "Student-to-student exchange",
     ],
+    whyItWorks: "You don't need brand new everything, and Craigslist feels sketchy. Setly keeps it local and student-to-student — verified people from your community, not random strangers.",
   },
   {
     id: "community",
@@ -166,6 +169,7 @@ const features = [
       "Location-based communities",
       "Real relationships, not networking",
     ],
+    whyItWorks: "Loneliness is real when you're in a new place. Generic social apps feel forced. Setly connects you with people who share your interests and are actually nearby — verified students, not profiles.",
   },
 ];
 
@@ -370,6 +374,15 @@ export function ExperienceScreen({ onNext, onBack, selectedMoment }: ExperienceS
                           {currentFeature.solutions.join('. ')}
                         </p>
                       </div>
+
+                      {/* Why it works - inline justification */}
+                      {currentFeature.whyItWorks && (
+                        <div className="pt-4 border-t border-gray-200/50">
+                          <p className="text-sm text-[var(--setly-text-secondary)] leading-relaxed italic">
+                            {currentFeature.whyItWorks}
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     {/* Subtle tap hint */}
